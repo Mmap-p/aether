@@ -26,7 +26,7 @@ const inView = (delay = 0) => ({
 const HERO_PLANET   = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1280px-The_Earth_seen_from_Apollo_17.jpg';
 
 const CARD_OBSERVE  = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/1280px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg';
-const CARD_DISCOVER = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/GPN-2000-001508.jpg/1280px-GPN-2000-001508.jpg';
+const CARD_DISCOVER = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Hubble_Deep_Field.jpg/1280px-Hubble_Deep_Field.jpg';
 const CARD_RESEARCH = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/HST-SM4.jpeg/1280px-HST-SM4.jpeg';
 
 const FEED_IMG_1    = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-0a-99.jpg/1280px-ESO-VLT-Laser-phot-0a-99.jpg';
@@ -49,19 +49,31 @@ export default function HomePage() {
           overflow: hidden;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(127,236,220,0.1);
-          transition: border-color 300ms ease, background 300ms ease;
+          transition: border-color 300ms ease, background 300ms ease, box-shadow 0.5s ease;
           cursor: default;
+          box-shadow: none;
         }
         .pillar-card:hover {
           border-color: rgba(127,236,220,0.28);
           background: rgba(255,255,255,0.055);
         }
         .pillar-card .card-bg {
-          transition: opacity 400ms ease;
-          opacity: 0.18;
+          transition: opacity 0.5s ease, filter 0.5s ease;
+          opacity: 0.45;
+          filter: brightness(0.7) saturate(0.8);
         }
         .pillar-card:hover .card-bg {
-          opacity: 0.4;
+          opacity: 0.7;
+          filter: brightness(1.1) saturate(1.3) contrast(1.05);
+        }
+        .pillar-observe:hover {
+          box-shadow: inset 0 0 60px rgba(127,236,220,0.08), 0 0 30px rgba(127,236,220,0.05);
+        }
+        .pillar-discover:hover {
+          box-shadow: inset 0 0 60px rgba(192,132,252,0.08);
+        }
+        .pillar-research:hover {
+          box-shadow: inset 0 0 60px rgba(255,217,125,0.08);
         }
         .pillar-underline {
           display: block;
@@ -421,7 +433,7 @@ export default function HomePage() {
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
         >
           {/* 01 — OBSERVE */}
-          <motion.div {...inView(0)} className="pillar-card" style={{ minHeight: '600px' }}>
+          <motion.div {...inView(0)} className="pillar-card pillar-observe" style={{ minHeight: '600px' }}>
             {/* Background image */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -485,7 +497,7 @@ export default function HomePage() {
           </motion.div>
 
           {/* 02 — DISCOVER */}
-          <motion.div {...inView(0.12)} className="pillar-card" style={{ minHeight: '600px' }}>
+          <motion.div {...inView(0.12)} className="pillar-card pillar-discover" style={{ minHeight: '600px' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={CARD_DISCOVER}
@@ -544,7 +556,7 @@ export default function HomePage() {
           </motion.div>
 
           {/* 03 — RESEARCH */}
-          <motion.div {...inView(0.24)} className="pillar-card" style={{ minHeight: '600px' }}>
+          <motion.div {...inView(0.24)} className="pillar-card pillar-research" style={{ minHeight: '600px' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={CARD_RESEARCH}
@@ -750,37 +762,92 @@ export default function HomePage() {
 
           {/* Card 3 — AstroMetric_001 (no image — data viz placeholder) */}
           <div className="feed-card">
-            {/* Data viz placeholder */}
+            {/* Gravitational wave chirp visualization */}
             <div style={{
-              width: '100%', height: '200px',
-              background: 'rgba(127,236,220,0.04)',
-              border: 'none',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: '100%', height: '256px',
+              background: '#020810',
               position: 'relative', overflow: 'hidden',
             }}>
-              {/* Monitoring icon */}
-              <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                  <circle cx="24" cy="24" r="22" stroke="rgba(127,236,220,0.25)" strokeWidth="1" />
-                  <circle cx="24" cy="24" r="14" stroke="rgba(127,236,220,0.18)" strokeWidth="1" strokeDasharray="4 3" />
-                  <circle cx="24" cy="24" r="4" fill="rgba(127,236,220,0.6)" />
-                  <line x1="24" y1="2" x2="24" y2="10" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5" strokeLinecap="round" />
-                  <line x1="24" y1="38" x2="24" y2="46" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5" strokeLinecap="round" />
-                  <line x1="2" y1="24" x2="10" y2="24" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5" strokeLinecap="round" />
-                  <line x1="38" y1="24" x2="46" y2="24" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-                <div style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '9px',
-                  color: 'rgba(127,236,220,0.5)', letterSpacing: '0.2em',
-                  marginTop: '10px', textTransform: 'uppercase',
-                }}>Gravitational · Analysis</div>
-              </div>
-              {/* Subtle grid lines */}
+              {/* Grid lines */}
+              {[20,40,60,80].map(pct => (
+                <div key={pct} style={{
+                  position: 'absolute', left: 0, right: 0,
+                  top: `${pct}%`, height: '1px',
+                  background: 'rgba(255,255,255,0.03)',
+                }} />
+              ))}
+              {/* Animated SVG wave */}
+              <svg
+                width="200%" height="100%"
+                viewBox="0 0 800 256"
+                preserveAspectRatio="none"
+                style={{
+                  position: 'absolute', top: 0, left: 0,
+                  animation: 'gwScroll 8s linear infinite',
+                }}
+              >
+                {/* Noise baseline — teal faint */}
+                <polyline
+                  fill="none"
+                  stroke="rgba(127,236,220,0.18)"
+                  strokeWidth="1"
+                  points={Array.from({length: 401}, (_, i) => {
+                    const x = i * 2;
+                    const y = 128 + (Math.sin(i * 0.8) * 3 + Math.sin(i * 2.1) * 1.5);
+                    return `${x},${y}`;
+                  }).join(' ')}
+                />
+                {/* Secondary chirp — violet */}
+                <polyline
+                  fill="none"
+                  stroke="rgba(192,132,252,0.45)"
+                  strokeWidth="1.2"
+                  points={Array.from({length: 401}, (_, i) => {
+                    const x = i * 2;
+                    const phase = i * 0.04 + Math.pow(i / 400, 3) * 80;
+                    const amp = 4 + Math.pow(i / 400, 2.5) * 30;
+                    const y = 128 + Math.sin(phase) * amp * 0.6;
+                    return `${x},${y}`;
+                  }).join(' ')}
+                />
+                {/* Main chirp — teal */}
+                <polyline
+                  fill="none"
+                  stroke="#7FECDC"
+                  strokeWidth="1.8"
+                  points={Array.from({length: 401}, (_, i) => {
+                    const x = i * 2;
+                    const phase = i * 0.04 + Math.pow(i / 400, 3) * 80;
+                    const amp = 4 + Math.pow(i / 400, 2.5) * 30;
+                    const y = 128 + Math.sin(phase) * amp;
+                    return `${x},${y}`;
+                  }).join(' ')}
+                  style={{ filter: 'drop-shadow(0 0 3px rgba(127,236,220,0.6))' }}
+                />
+              </svg>
+              {/* Labels */}
               <div style={{
-                position: 'absolute', inset: 0,
-                backgroundImage: 'linear-gradient(rgba(127,236,220,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(127,236,220,0.04) 1px, transparent 1px)',
-                backgroundSize: '24px 24px',
-              }} />
+                position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)',
+                fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(127,236,220,0.55)',
+                letterSpacing: '0.1em', whiteSpace: 'nowrap',
+              }}>LIGO O4 · GW240428</div>
+              <div style={{
+                position: 'absolute', bottom: '8px', right: '12px',
+                fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'rgba(232,240,255,0.25)',
+                letterSpacing: '0.08em',
+              }}>TIME (seconds)</div>
+              <div style={{
+                position: 'absolute', left: '8px', top: '50%',
+                transform: 'translateY(-50%) rotate(-90deg)',
+                fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'rgba(232,240,255,0.25)',
+                letterSpacing: '0.08em', whiteSpace: 'nowrap',
+              }}>STRAIN h(t)</div>
+              <style>{`
+                @keyframes gwScroll {
+                  from { transform: translateX(0); }
+                  to   { transform: translateX(-50%); }
+                }
+              `}</style>
             </div>
             <div style={{ padding: '20px 20px 22px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
