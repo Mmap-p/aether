@@ -423,6 +423,23 @@ export default function LoginPage() {
                 Continue with Google
               </motion.button>
             </motion.div>
+
+            {/* Dev-mode test access */}
+            {process.env.NEXT_PUBLIC_APP_ENV === 'development' && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ ...ease, delay: 0.64 } as Transition}
+                style={{ marginTop: '4px', padding: '12px 14px', border: '1px solid rgba(255,217,125,0.2)', borderRadius: '10px', background: 'rgba(255,217,125,0.04)', textAlign: 'center' }}
+              >
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(255,217,125,0.6)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '8px' }}>
+                  DEV MODE — Test Access
+                </div>
+                <Link href="/feed" style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#FFD97D', textDecoration: 'underline', letterSpacing: '0.04em' }}>
+                  Skip login → Enter Feed
+                </Link>
+              </motion.div>
+            )}
           </form>
 
           {/* Footer */}

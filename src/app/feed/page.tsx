@@ -41,7 +41,9 @@ const navItems = [
 ];
 
 const FEED_TABS = ['For You', 'Following', 'Trending', 'Alerts', 'Papers'];
-const NEBULA_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/1280px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg';
+const M42_IMG    = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg/1280px-Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg';
+const SATURN_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/1280px-Saturn_during_Equinox.jpg';
+const M31_IMG    = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/M31_mosaic_ESA398678.jpg/1280px-M31_mosaic_ESA398678.jpg';
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
@@ -140,7 +142,7 @@ function ObservationPost() {
 
         {/* Image */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={NEBULA_IMG} alt="M42 Orion Nebula" style={{ width: '100%', height: '260px', objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
+        <img src={M42_IMG} alt="M42 Orion Nebula" style={{ width: '100%', height: '260px', objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
 
         {/* Metadata strip */}
         <div style={{ display: 'flex', gap: '20px', padding: '10px 20px', borderBottom: '1px solid rgba(127,236,220,0.06)', overflowX: 'auto' }}>
@@ -218,22 +220,32 @@ function SkyAlertPost() {
             </div>
           </div>
 
-          {/* Arc trajectory */}
-          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px', padding: '12px 14px', marginBottom: '12px' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(232,240,255,0.28)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '8px' }}>
-              Pass Trajectory · Mumbai 18.97°N 72.82°E
-            </div>
-            <svg width="100%" height="64" viewBox="0 0 480 64" preserveAspectRatio="none">
-              <line x1="0" y1="60" x2="480" y2="60" stroke="rgba(232,240,255,0.08)" strokeWidth="1" />
-              <path d="M 24 58 Q 240 6 456 52" stroke="rgba(255,143,171,0.4)" strokeWidth="1.5" fill="none" strokeDasharray="5 4" />
-              <circle cx="240" cy="6" r="6" fill="none" stroke="#FF8FAB" strokeWidth="1.5" />
-              <circle cx="240" cy="6" r="3" fill="#FF8FAB" />
-              <circle cx="240" cy="6" r="12" fill="rgba(255,143,171,0.1)" />
-              <text x="6"  y="60" style={{ fontFamily: 'monospace', fontSize: '9px' }} fill="rgba(232,240,255,0.35)">NNW</text>
-              <text x="438" y="58" style={{ fontFamily: 'monospace', fontSize: '9px' }} fill="rgba(232,240,255,0.35)">SSE</text>
-              {[10,20,45,78,45,20,10].map((d, i) => (
-                <text key={i} x={i * 66 + 30} y="56" style={{ fontFamily: 'monospace', fontSize: '8px' }} fill="rgba(232,240,255,0.18)">{d}°</text>
+          {/* ISS Map Visualization */}
+          <div style={{ background: 'rgba(2,8,16,0.85)', border: '1px solid rgba(127,236,220,0.1)', borderRadius: '12px', overflow: 'hidden', height: '150px', position: 'relative', marginBottom: '12px' }}>
+            <div style={{ position: 'absolute', top: '8px', left: '12px', fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'rgba(127,236,220,0.55)', letterSpacing: '0.1em', zIndex: 2 }}>ISS ORBITAL TRACK · LIVE</div>
+            <svg width="100%" height="100%" viewBox="0 0 480 150" preserveAspectRatio="xMidYMid meet" style={{ position: 'absolute', inset: 0 }}>
+              {/* Stars */}
+              {[[40,20],[80,50],[120,15],[180,35],[260,25],[320,40],[400,18],[440,55],[30,70],[160,65],[350,60],[420,35]].map(([x,y],i) => (
+                <circle key={i} cx={x} cy={y} r={i % 3 === 0 ? 1.2 : 0.8} fill="rgba(232,240,255,0.4)" />
               ))}
+              {/* Earth arc at bottom */}
+              <ellipse cx="240" cy="310" rx="320" ry="230" fill="rgba(10,30,55,0.6)" stroke="rgba(127,236,220,0.2)" strokeWidth="1.5" />
+              <ellipse cx="240" cy="310" rx="320" ry="230" fill="none" stroke="rgba(127,236,220,0.08)" strokeWidth="8" />
+              {/* Atmosphere glow */}
+              <ellipse cx="240" cy="310" rx="332" ry="240" fill="none" stroke="rgba(127,236,220,0.05)" strokeWidth="12" />
+              {/* Orbital path */}
+              <path d="M 20 140 Q 240 20 460 132" fill="none" stroke="rgba(127,236,220,0.38)" strokeWidth="1.3" strokeDasharray="6 5" />
+              {/* Mumbai city dot */}
+              <circle cx="296" cy="143" r="3.5" fill="#7FECDC" />
+              <circle cx="296" cy="143" r="7" fill="none" stroke="rgba(127,236,220,0.3)" strokeWidth="1" />
+              <text x="308" y="148" style={{ fontFamily: 'monospace', fontSize: '8px' }} fill="#7FECDC" opacity="0.85">Mumbai</text>
+              {/* ISS cross icon — animated along arc */}
+              <g style={{ animation: 'issOrbit 8s linear infinite', transformOrigin: '240px 60px' }}>
+                <line x1="237" y1="60" x2="243" y2="60" stroke="#7FECDC" strokeWidth="2.2" strokeLinecap="round" />
+                <line x1="240" y1="57" x2="240" y2="63" stroke="#7FECDC" strokeWidth="2.2" strokeLinecap="round" />
+                <circle cx="240" cy="60" r="9" fill="none" stroke="rgba(127,236,220,0.22)" strokeWidth="1" />
+                <circle cx="240" cy="60" r="3" fill="rgba(127,236,220,0.15)" />
+              </g>
             </svg>
           </div>
 
@@ -261,11 +273,11 @@ function PaperPost() {
     <motion.div {...inView(0.2)}>
       <GlassCard>
         <div style={{ padding: '18px 20px 12px', display: 'flex', gap: '11px', alignItems: 'flex-start' }}>
-          <Avatar initials="PM" color="#FFD97D" />
+          <Avatar initials="RM" color="#C084FC" />
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '7px', flexWrap: 'wrap' }}>
               <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: '#E8F0FF' }}>Prof. R. Mehta</span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#FFD97D', border: '1px solid rgba(255,217,125,0.3)', background: 'rgba(255,217,125,0.07)', borderRadius: '99px', padding: '1px 7px' }}>ISRO</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#C084FC', border: '1px solid rgba(192,132,252,0.3)', background: 'rgba(192,132,252,0.07)', borderRadius: '99px', padding: '1px 7px' }}>ISRO</span>
             </div>
             <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(232,240,255,0.3)', marginTop: '3px' }}>1h ago · shared a paper</div>
           </div>
@@ -313,6 +325,257 @@ function PaperPost() {
   );
 }
 
+// ─── Post 4: Equipment Log ────────────────────────────────────────────────────
+
+function EquipmentPost() {
+  return (
+    <motion.div {...inView(0.3)}>
+      <GlassCard>
+        <div style={{ padding: '18px 20px 0', display: 'flex', gap: '11px', alignItems: 'flex-start' }}>
+          <Avatar initials="SR" color="#FFD97D" />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '7px', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: '#E8F0FF' }}>@stargazer_rx</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#FFD97D', border: '1px solid rgba(255,217,125,0.3)', background: 'rgba(255,217,125,0.07)', borderRadius: '99px', padding: '1px 7px' }}>CITIZEN SCIENTIST</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#FFD97D', background: 'rgba(255,217,125,0.1)', border: '1px solid rgba(255,217,125,0.25)', borderRadius: '99px', padding: '1px 8px' }}>EQUIPMENT LOG</span>
+            </div>
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(232,240,255,0.3)', marginTop: '3px' }}>Pune, India · 6h ago</div>
+          </div>
+          <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(232,240,255,0.22)', padding: '2px' }}>{icons.dots}</button>
+        </div>
+        <div style={{ padding: '13px 20px 11px' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'rgba(232,240,255,0.75)', lineHeight: 1.65, margin: 0 }}>
+            First light with the new Celestron EdgeHD 11&quot;. The optical quality is extraordinary. Star test shows near-perfect diffraction rings. Already resolved the Cassini Division in Saturn&apos;s rings on first night out.
+          </p>
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={SATURN_IMG} alt="Saturn during equinox" style={{ width: '100%', height: '240px', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+        <div style={{ padding: '9px 14px 12px', display: 'flex', gap: '3px', flexWrap: 'wrap' }}>
+          <ReactionButton icon="🔬" label="Peer Review" count={4}  color="#7FECDC" />
+          <ReactionButton icon="🔁" label="Replicate"   count={31} color="#C084FC" />
+          <ReactionButton icon="📎" label="Cite"        count={1}  color="#FFD97D" />
+          <ReactionButton icon="❓" label="Question"    count={7}  color="rgba(232,240,255,0.5)" />
+        </div>
+      </GlassCard>
+    </motion.div>
+  );
+}
+
+// ─── Post 5: Discussion ───────────────────────────────────────────────────────
+
+const DISCUSSION_COMMENTS = [
+  { initials: 'SC', color: '#7FECDC', name: 'Dr. Sarah Chen',  text: 'The filter being behind us implies we are genuinely rare — statistically terrifying.' },
+  { initials: 'AT', color: '#FF8FAB', name: 'Dr. Aris Thorne', text: 'Webb CO₂ signatures are compelling but insufficient for definitive biosignature claim.' },
+  { initials: 'LV', color: '#7FECDC', name: 'Eng. Leo Vega',   text: 'The orbital resonance alone makes TRAPPIST fascinating from a stability perspective.' },
+];
+
+function DiscussionPost() {
+  return (
+    <motion.div {...inView(0.35)}>
+      <GlassCard>
+        <div style={{ padding: '18px 20px 0', display: 'flex', gap: '11px', alignItems: 'flex-start' }}>
+          <Avatar initials="RM" color="#C084FC" />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '7px', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: '#E8F0FF' }}>Prof. R. Mehta</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#C084FC', border: '1px solid rgba(192,132,252,0.3)', background: 'rgba(192,132,252,0.07)', borderRadius: '99px', padding: '1px 7px' }}>ISRO SENIOR SCIENTIST</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#C084FC', background: 'rgba(192,132,252,0.1)', border: '1px solid rgba(192,132,252,0.25)', borderRadius: '99px', padding: '1px 8px' }}>DISCUSSION</span>
+            </div>
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(232,240,255,0.3)', marginTop: '3px' }}>4h ago</div>
+          </div>
+          <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(232,240,255,0.22)', padding: '2px' }}>{icons.dots}</button>
+        </div>
+        <div style={{ padding: '13px 20px 16px' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'rgba(232,240,255,0.75)', lineHeight: 1.65, margin: 0 }}>
+            Interesting question from yesterday&apos;s seminar — if Fermi&apos;s paradox is resolved by the Great Filter being behind us, what does that imply about the probability of complex life on TRAPPIST-1 system planets? The Webb data suggests liquid water is plausible. Thoughts from the community?
+          </p>
+        </div>
+        <div style={{ padding: '8px 14px 12px', display: 'flex', gap: '3px', flexWrap: 'wrap', borderBottom: '1px solid rgba(127,236,220,0.06)' }}>
+          <ReactionButton icon="🔬" label="Peer Review" count={28} color="#7FECDC" />
+          <ReactionButton icon="🔁" label="Replicate"   count={0}  color="#C084FC" />
+          <ReactionButton icon="📎" label="Cite"        count={6}  color="#FFD97D" />
+          <ReactionButton icon="❓" label="Question"    count={44} color="rgba(232,240,255,0.5)" />
+        </div>
+        {/* Comment previews */}
+        <div style={{ padding: '10px 16px 14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {DISCUSSION_COMMENTS.map((c) => (
+            <div key={c.initials} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(127,236,220,0.06)', borderRadius: '10px', padding: '10px 12px', display: 'flex', gap: '9px', alignItems: 'flex-start' }}>
+              <Avatar initials={c.initials} color={c.color} size={26} />
+              <div>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500, color: c.color, marginRight: '6px' }}>{c.name}</span>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(232,240,255,0.55)', lineHeight: 1.5 }}>{c.text}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </GlassCard>
+    </motion.div>
+  );
+}
+
+// ─── Post 6: Aurora Alert ─────────────────────────────────────────────────────
+
+function AuroraAlertPost() {
+  const [secs, setSecs] = useState(167 * 60); // 2h 47m
+  useEffect(() => {
+    const t = setInterval(() => setSecs((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const hh = String(Math.floor(secs / 3600)).padStart(1, '0');
+  const mm = String(Math.floor((secs % 3600) / 60)).padStart(2, '0');
+  const ss = String(secs % 60).padStart(2, '0');
+
+  return (
+    <motion.div {...inView(0.4)}>
+      <GlassCard style={{ border: '1px solid rgba(255,217,125,0.18)' }}>
+        <div style={{ padding: '16px 20px 12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Avatar initials="AW" color="#FFD97D" size={34} />
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: '#E8F0FF' }}>AstroWatch</span>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(232,240,255,0.32)' }}>Automated Alert</span>
+            </div>
+          </div>
+          {/* LIVE badge — amber/orange for aurora (distinct from rose ISS) */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,217,125,0.1)', border: '1px solid rgba(255,217,125,0.32)', borderRadius: '99px', padding: '4px 10px' }}>
+            <LivePulse color="#FFD97D" />
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#FFD97D', letterSpacing: '0.1em' }}>LIVE</span>
+          </div>
+        </div>
+        <div style={{ padding: '0 20px 16px' }}>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 300, color: '#E8F0FF', margin: '0 0 5px', lineHeight: 1.2 }}>
+            Aurora Borealis Alert
+          </h3>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(232,240,255,0.52)', margin: '0 0 14px', lineHeight: 1.6 }}>
+            Kp index reached 7.2 — visible to 50°N latitude
+          </p>
+          {/* Kp bar */}
+          <div style={{ marginBottom: '14px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(232,240,255,0.35)', letterSpacing: '0.1em' }}>Kp INDEX</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#FFD97D' }}>7.2 / 9</span>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: '99px', height: '6px', overflow: 'hidden' }}>
+              <div style={{ width: `${(7.2/9)*100}%`, height: '100%', background: 'linear-gradient(to right, #7FECDC, #FFD97D, #FF8FAB)', borderRadius: '99px' }} />
+            </div>
+          </div>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(232,240,255,0.62)', lineHeight: 1.65, margin: '0 0 14px' }}>
+            G3 geomagnetic storm in progress. Aurora visible across Northern Europe, Canada, and Northern USA right now. Clear skies forecast for next 3 hours.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(255,217,125,0.6)', letterSpacing: '0.06em' }}>
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="currentColor" strokeWidth="1"/><path d="M5 2.5v3l1.5 1" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/></svg>
+              Expires in {hh}h {mm}m {ss}s
+            </div>
+            <motion.button whileTap={{ scale: 0.96 }} style={{ background: 'rgba(255,217,125,0.08)', border: '1px solid rgba(255,217,125,0.28)', borderRadius: '8px', padding: '7px 16px', fontFamily: 'var(--font-body)', fontSize: '12px', color: '#FFD97D', cursor: 'pointer' }}>
+              View Live Map
+            </motion.button>
+          </div>
+        </div>
+        <div style={{ padding: '8px 14px 12px', borderTop: '1px solid rgba(255,217,125,0.08)', display: 'flex', gap: '3px', flexWrap: 'wrap' }}>
+          <ReactionButton icon="👁" label="Watching"  count={1243} color="#FFD97D" />
+          <ReactionButton icon="📍" label="My Location" count={87} color="#7FECDC" />
+          <ReactionButton icon="🔔" label="Remind"    count={340}  color="#FF8FAB" />
+        </div>
+      </GlassCard>
+    </motion.div>
+  );
+}
+
+// ─── Post 7: Beta Pic Paper ───────────────────────────────────────────────────
+
+function BetaPicPost() {
+  return (
+    <motion.div {...inView(0.45)}>
+      <GlassCard>
+        <div style={{ padding: '18px 20px 12px', display: 'flex', gap: '11px', alignItems: 'flex-start' }}>
+          <Avatar initials="JU" color="#7FECDC" />
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '7px', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: '#E8F0FF' }}>@jwst_updates</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#7FECDC', border: '1px solid rgba(127,236,220,0.3)', background: 'rgba(127,236,220,0.07)', borderRadius: '99px', padding: '1px 7px' }}>AUTOMATED BOT</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#7FECDC', background: 'rgba(127,236,220,0.1)', border: '1px solid rgba(127,236,220,0.25)', borderRadius: '99px', padding: '1px 8px' }}>ARXIV</span>
+            </div>
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(232,240,255,0.3)', marginTop: '3px' }}>30m ago · new paper</div>
+          </div>
+        </div>
+        {/* Paper card */}
+        <div style={{ margin: '0 16px 16px', background: 'rgba(127,236,220,0.04)', border: '1px solid rgba(127,236,220,0.18)', borderRadius: '12px', overflow: 'hidden' }}>
+          <div style={{ padding: '9px 14px', borderBottom: '1px solid rgba(127,236,220,0.1)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#7FECDC', border: '1px solid rgba(127,236,220,0.35)', borderRadius: '4px', padding: '2px 6px', letterSpacing: '0.08em' }}>arXiv</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(232,240,255,0.28)' }}>2025.18842 · astro-ph.EP</span>
+            <span style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(127,236,220,0.55)' }}>NEW</span>
+          </div>
+          <div style={{ padding: '13px 14px' }}>
+            <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '15px', fontWeight: 400, color: '#E8F0FF', margin: '0 0 7px', lineHeight: 1.45 }}>
+              Direct Imaging of Beta Pictoris c Using GRAVITY+ Interferometry: Orbital Architecture Confirmed
+            </h4>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(232,240,255,0.4)', margin: '0 0 8px' }}>
+              Lacour et al. · 2025
+            </p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(232,240,255,0.48)', lineHeight: 1.6, margin: '0 0 10px' }}>
+              We present the first direct detection of the inner companion Beta Pictoris c using the upgraded GRAVITY+ instrument on the VLTI. The astrometric data confirm a co-planar orbit with Beta Pictoris b…
+            </p>
+            <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(192,132,252,0.75)', border: '1px solid rgba(192,132,252,0.25)', borderRadius: '99px', padding: '2px 8px' }}>β Pic c</span>
+              {['Direct Imaging','VLTI','GRAVITY+'].map((t) => (
+                <span key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(127,236,220,0.6)', border: '1px solid rgba(127,236,220,0.18)', borderRadius: '99px', padding: '2px 8px' }}>{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div style={{ padding: '8px 14px 12px', display: 'flex', gap: '3px', flexWrap: 'wrap' }}>
+          <ReactionButton icon="🔬" label="Peer Review" count={15} color="#7FECDC" />
+          <ReactionButton icon="📎" label="Cite"        count={8}  color="#FFD97D" />
+          <ReactionButton icon="❓" label="Question"    count={3}  color="rgba(232,240,255,0.5)" />
+        </div>
+      </GlassCard>
+    </motion.div>
+  );
+}
+
+// ─── Post 8: Andromeda Observation ────────────────────────────────────────────
+
+function AndromedaPost() {
+  return (
+    <motion.div {...inView(0.5)}>
+      <GlassCard>
+        <div style={{ padding: '18px 20px 0', display: 'flex', gap: '11px', alignItems: 'flex-start' }}>
+          <Avatar initials="YT" color="#7FECDC" />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '7px', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: '#E8F0FF' }}>Dr. Yuki Tanaka</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#7FECDC', border: '1px solid rgba(127,236,220,0.3)', background: 'rgba(127,236,220,0.07)', borderRadius: '99px', padding: '1px 7px' }}>SUBARU TELESCOPE</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#7FECDC', background: 'rgba(127,236,220,0.1)', border: '1px solid rgba(127,236,220,0.25)', borderRadius: '99px', padding: '1px 8px' }}>OBSERVATION</span>
+            </div>
+            <div style={{ display: 'flex', gap: '5px', marginTop: '6px', flexWrap: 'wrap' }}>
+              {['M31','M32','M110'].map((obj) => (
+                <span key={obj} style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#C084FC', background: 'rgba(192,132,252,0.08)', border: '1px solid rgba(192,132,252,0.22)', borderRadius: '99px', padding: '1px 7px' }}>{obj}</span>
+              ))}
+            </div>
+          </div>
+          <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(232,240,255,0.22)', padding: '2px' }}>{icons.dots}</button>
+        </div>
+        <div style={{ padding: '13px 20px 11px' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'rgba(232,240,255,0.75)', lineHeight: 1.65, margin: 0 }}>
+            Andromeda galaxy system in Hα+OIII narrowband. Three hours integration showing the companion galaxies M32 and M110 in exceptional detail. The dust lanes across M31&apos;s disk are clearly resolved.
+          </p>
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={M31_IMG} alt="M31 Andromeda Galaxy mosaic" style={{ width: '100%', height: '260px', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+        <div style={{ padding: '8px 20px 4px' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#FFD97D' }}>3 image composite · 3h exposure · Hα+OIII</span>
+        </div>
+        <div style={{ padding: '8px 14px 12px', display: 'flex', gap: '3px', flexWrap: 'wrap' }}>
+          <ReactionButton icon="🔬" label="Peer Review" count={67} color="#7FECDC" />
+          <ReactionButton icon="🔁" label="Replicate"   count={23} color="#C084FC" />
+          <ReactionButton icon="📎" label="Cite"        count={12} color="#FFD97D" />
+        </div>
+      </GlassCard>
+    </motion.div>
+  );
+}
+
 // ─── Composer ─────────────────────────────────────────────────────────────────
 
 function Composer({ onClose }: { onClose?: () => void }) {
@@ -327,7 +590,7 @@ function Composer({ onClose }: { onClose?: () => void }) {
     <GlassCard style={{ marginBottom: '14px' }}>
       <div style={{ padding: '15px 18px' }}>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-          <Avatar initials="YO" color="#7FECDC" size={34} />
+          <Avatar initials="ME" color="#7FECDC" size={34} />
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -492,6 +755,13 @@ export default function FeedPage() {
           0%   { transform: scale(1); opacity: 0.7; }
           100% { transform: scale(2.8); opacity: 0; }
         }
+        @keyframes issOrbit {
+          0%   { transform: translate(-180px, 68px); }
+          25%  { transform: translate(-90px, 10px);  }
+          50%  { transform: translate(0px, -8px);    }
+          75%  { transform: translate(90px, 15px);   }
+          100% { transform: translate(180px, 60px);  }
+        }
         .feed-sidebar   { display: none !important; }
         .feed-right     { display: none !important; }
         .mobile-nav     { display: flex !important; }
@@ -562,10 +832,10 @@ export default function FeedPage() {
 
           <div style={{ padding: '14px 20px', borderTop: '1px solid rgba(127,236,220,0.07)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Avatar initials="YO" color="#7FECDC" size={34} />
+              <Avatar initials="AK" color="#7FECDC" size={34} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: '#E8F0FF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Your Observatory</div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(232,240,255,0.28)' }}>@you · Pro</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: '#E8F0FF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Aakash Kerketta</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(232,240,255,0.28)' }}>@aakash · Pro</div>
               </div>
               <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#7FECDC', boxShadow: '0 0 8px rgba(127,236,220,0.6)', flexShrink: 0 }} />
             </div>
@@ -595,11 +865,16 @@ export default function FeedPage() {
               <Composer />
             </div>
 
-            {/* Posts */}
+            {/* Posts 1–8 */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <ObservationPost />
               <SkyAlertPost />
               <PaperPost />
+              <EquipmentPost />
+              <DiscussionPost />
+              <AuroraAlertPost />
+              <BetaPicPost />
+              <AndromedaPost />
             </div>
           </div>
         </div>
