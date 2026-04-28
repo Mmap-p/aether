@@ -26,7 +26,7 @@ const inView = (delay = 0) => ({
 const HERO_PLANET   = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1280px-The_Earth_seen_from_Apollo_17.jpg';
 
 const CARD_OBSERVE  = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/1280px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg';
-const CARD_DISCOVER = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Artemis_I_liftoff_from_LC-39B_%28NHQ202211160027%29.jpg/1280px-Artemis_I_liftoff_from_LC-39B_%28NHQ202211160027%29.jpg';
+const CARD_DISCOVER = 'https://images.unsplash.com/photo-1541873676-a18131494184?w=1280&q=80';
 const CARD_RESEARCH = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/HST-SM4.jpeg/1280px-HST-SM4.jpeg';
 
 const FEED_IMG_1    = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-0a-99.jpg/1280px-ESO-VLT-Laser-phot-0a-99.jpg';
@@ -667,8 +667,8 @@ export default function HomePage() {
           <div className="feed-card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-0a-99.jpg/1280px-ESO-VLT-Laser-phot-0a-99.jpg"
-              alt="Solar flare observation — ESO VLT"
+              src="https://images.unsplash.com/photo-1614732414444-096e5f1122d5?w=1280&q=80"
+              alt="Solar flare observation"
               crossOrigin="anonymous"
               style={{ width: '100%', height: '200px', objectFit: 'cover', display: 'block' }}
             />
