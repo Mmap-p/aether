@@ -26,7 +26,7 @@ const inView = (delay = 0) => ({
 const HERO_PLANET   = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1280px-The_Earth_seen_from_Apollo_17.jpg';
 
 const CARD_OBSERVE  = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/1280px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg';
-const CARD_DISCOVER = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Hubble_Deep_Field.jpg/1280px-Hubble_Deep_Field.jpg';
+const CARD_DISCOVER = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Artemis_I_liftoff_from_LC-39B_%28NHQ202211160027%29.jpg/1280px-Artemis_I_liftoff_from_LC-39B_%28NHQ202211160027%29.jpg';
 const CARD_RESEARCH = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/HST-SM4.jpeg/1280px-HST-SM4.jpeg';
 
 const FEED_IMG_1    = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-0a-99.jpg/1280px-ESO-VLT-Laser-phot-0a-99.jpg';
