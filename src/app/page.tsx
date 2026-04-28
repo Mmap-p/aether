@@ -23,14 +23,14 @@ const inView = (delay = 0) => ({
 
 // ─── Asset URLs ───────────────────────────────────────────────────────────────
 
-const HERO_PLANET = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEHIG8yRcnP6CWxLA5JWL_sn2cko1BIxF73sH0nE9XmzKHcD7OEgA1g90h4txSVmuSqgaqCFPWhaf2TBDb045sL-pfkavy-ERBJE2pUn0oGVN8sgG2Wj3jvC2-t2cvykwjWnakhJ1ZPwndQ4X-89wu8zVl2dgFeqYQnVOq69zxDHG6YQyyFJOZjUBIbvcx5M53IDjblTQHzmJ_B8xWgj_EnueoNqfY6yXWMbWPXd2Yr8-12D4-zvmrfTqe2r2Sh9b0rFhBcM7hF-Y';
+const HERO_PLANET   = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1280px-The_Earth_seen_from_Apollo_17.jpg';
 
-const CARD_OBSERVE   = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEaKo7wRYBGLdLGYLddIctwcJILisj89kQrOXTwZnj7dq6tlmyvThuUIqXipjFiJlM202oPyVPeQFru2CRpD-GVI_eZ6VmKwUrlNn6w5zgoGaiW5us3rahP7Vw9Agq0bh19pWzQoj9984UztOYCHy984R167qEcYdATQOq1GRa13pUIMGMEl9ZvR-3Kk0l55Rp126pxvilxzxlynzhb2u5m0XeLeVSD_QKjEunoBkjFMl7RRtUxL6Yf6wyVhBrTmKzxtziIp2B8KY';
-const CARD_DISCOVER  = 'https://lh3.googleusercontent.com/aida-public/AB6AXuA7uBHf-u4AEOzwkkY2ph6drzSfMbNFT3iX4iK2lB_L1hrghjeT6TFCJGlTKITuzfdEoVl9Bp9ufVsTxKGTdreQtC_67OyCZsAbRxR1oOfZkfaVwKU2PFo4g9zmJz2P6risHukCi6fZ5XMYXnw8A3Wa1GHchYWbpT8gz6eh6LXUSWxV-MaQD_OWKWiXfmKWjCyJ9dQoY25zbH6hV38zRR-glUHFJELjIoPoRGds4AmqDYQKVbGoA4aj8PauEaxbqdlAgp6FlPFkBKY';
-const CARD_RESEARCH  = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCQ4o9qQ24V_Z21vb5hr_UGzDDKtCkEn3sS8vPvveM0iVii9_eXJJFVJR3pRigZpji4L_NTvRA_6swJ0iTJT3oIcfPZp4VbiWaMzzS8NOkesqXid2j8oQ4CVyTuwMXzTZiznmCK8j24vet2K4zcSo0cTI5KFUW_FGrfC8eePxFFffAXoW9DRFFq8DlutdpfKIrmgj8oJcaebWkoqAwlPxjWlle8C_LQTQO_hrpbr-6Lj2i1NkWWnKVNAXguIBJXR07ADdKT3W5qxw';
+const CARD_OBSERVE  = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg/1280px-Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg';
+const CARD_DISCOVER = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/GPN-2000-001508.jpg/1280px-GPN-2000-001508.jpg';
+const CARD_RESEARCH = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/HST-SM4.jpeg/1280px-HST-SM4.jpeg';
 
-const FEED_IMG_1 = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrRHYGdP7ZATVoXFYYnS2mXudQvjTO4km9wnIrYkpHPuQAu-w98cslI8rLO-RNZwiBoFg7BeoysLExtezsqsw4cVAodk86AGYxLMr1C74hwIYZyCAkMbd5k03dwQcAYof2G0OKKXiwtGeWjITL9-IAccUIao-7ABbsJUyYXbKb7hkWfM7cDhkfieys01hevadLHnYKOIpwssf9NBqHTfjX3Bn7k9A2Y_h9q3V0YWDFOjYVBKYbuWnNkDHNRjb989J2HMt-sRsI9so';
-const FEED_IMG_2 = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD6m8qPIDCd-cajdNNT_NfeLJpHT0u7efd70Ksm7e-mpNBISxWaAAoO2g1C_eI2gye1KqsQeEZ3buprhl_Y_ZUwsoLtgWoYqk8nZJlPukHUmoKzasjBVKh-_kIm_DhUwzV-CKJ2U-mGqYup9xU9n8W4dcYNaIqFZPBKLfbbMQpxjDu9t1WvlmpOhpMtS6H43PoCaUXv0AglY9FkFObwMVw_MRX47X80fVBU88FnkD-o-ErkLQsCQ_HpXMZilwGtKUXpZDlWHDc';
+const FEED_IMG_1    = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-0a-99.jpg/1280px-ESO-VLT-Laser-phot-0a-99.jpg';
+const FEED_IMG_2    = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1280px-FullMoon2010.jpg';
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
