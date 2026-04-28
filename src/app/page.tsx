@@ -1,8 +1,36 @@
 'use client';
 
 import { motion, type Transition } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import PageWrapper from '@/components/layout/PageWrapper';
+
+const SpaceScene = dynamic(() => import('@/components/stars/SpaceScene'), {
+  ssr: false,
+  loading: () => (
+    <div style={{
+      position: 'absolute', right: 0, top: 0, width: '60%', height: '100%',
+      background: 'rgba(255,255,255,0.018)', borderRadius: '0 16px 16px 0',
+    }} />
+  ),
+});
+
+const JWSTPanel = dynamic(() => import('@/components/stars/JWSTPanel'), {
+  ssr: false,
+  loading: () => (
+    <div style={{
+      height: '400px', marginTop: '2px',
+      background: 'rgba(255,255,255,0.018)',
+      border: '1px solid rgba(127,236,220,0.12)',
+      borderRadius: '16px',
+    }} />
+  ),
+});
+
+const MarsScene = dynamic(() => import('@/components/stars/MarsScene'), {
+  ssr: false,
+  loading: () => null,
+});
 
 // ─── Animation helpers ────────────────────────────────────────────────────────
 
@@ -57,108 +85,6 @@ const posts = [
 ];
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-
-function PlanetVisual() {
-  return (
-    <div
-      className="planet-wrap"
-      style={{
-        position: 'absolute',
-        right: '-80px',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: '540px',
-        height: '540px',
-        pointerEvents: 'none',
-        zIndex: 1,
-      }}
-    >
-      {/* Tilted ring */}
-      <div style={{
-        position: 'absolute',
-        top: '-40px',
-        left: '-40px',
-        transform: 'perspective(600px) rotateX(72deg)',
-        pointerEvents: 'none',
-      }}>
-        <svg width="620" height="620" viewBox="0 0 620 620">
-          <circle
-            cx="310" cy="310" r="300"
-            fill="none"
-            stroke="rgba(127,236,220,0.28)"
-            strokeWidth="1.5"
-            strokeDasharray="16 7"
-            style={{ animation: 'ringDash 32s linear infinite' }}
-          />
-          <circle
-            cx="310" cy="310" r="316"
-            fill="none"
-            stroke="rgba(127,236,220,0.07)"
-            strokeWidth="0.5"
-          />
-        </svg>
-      </div>
-
-      {/* Sphere */}
-      <div
-        className="planet-sphere"
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          width: '500px',
-          height: '500px',
-          borderRadius: '50%',
-          background: `radial-gradient(circle at 34% 37%,
-            rgba(192,132,252,0.45) 0%,
-            rgba(127,236,220,0.2) 36%,
-            rgba(127,236,220,0.06) 58%,
-            transparent 70%
-          )`,
-          boxShadow: `
-            0 0 80px rgba(192,132,252,0.18),
-            0 0 160px rgba(192,132,252,0.08),
-            0 0 260px rgba(127,236,220,0.06),
-            inset 0 0 80px rgba(192,132,252,0.07)
-          `,
-          animation: 'sphereFloat 9s ease-in-out infinite',
-        }}
-      >
-        <div style={{
-          position: 'absolute',
-          top: '12%', left: '18%',
-          width: '38%', height: '30%',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%)',
-        }} />
-      </div>
-
-      {/* Orbiting dot */}
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        width: '560px',
-        height: '560px',
-        marginTop: '-280px',
-        marginLeft: '-280px',
-        animation: 'orbitArm 22s linear infinite',
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: '-5px',
-          left: '50%',
-          marginLeft: '-5px',
-          width: '10px',
-          height: '10px',
-          borderRadius: '50%',
-          background: '#7FECDC',
-          boxShadow: '0 0 14px rgba(127,236,220,0.9), 0 0 28px rgba(127,236,220,0.4)',
-        }} />
-      </div>
-    </div>
-  );
-}
 
 function PostCard({ post }: { post: typeof posts[0] }) {
   return (
@@ -281,18 +207,6 @@ export default function HomePage() {
   return (
     <PageWrapper>
       <style>{`
-        @keyframes sphereFloat {
-          0%, 100% { transform: translateY(0px); }
-          50%       { transform: translateY(-18px); }
-        }
-        @keyframes ringDash {
-          from { stroke-dashoffset: 0; }
-          to   { stroke-dashoffset: -320; }
-        }
-        @keyframes orbitArm {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
         @keyframes feedScroll {
           0%   { transform: translateY(0); }
           100% { transform: translateY(-50%); }
@@ -348,7 +262,7 @@ export default function HomePage() {
         padding: '0 8vw',
         overflow: 'hidden',
       }}>
-        <PlanetVisual />
+        <SpaceScene />
 
         {/* Left content */}
         <div style={{ position: 'relative', zIndex: 10, maxWidth: '580px', paddingTop: '64px', paddingBottom: '100px' }}>
@@ -702,6 +616,11 @@ export default function HomePage() {
             </div>
           </motion.div>
         </div>
+
+        {/* JWST Pillars of Creation — full-width fourth card */}
+        <div style={{ padding: '0 0' }}>
+          <JWSTPanel />
+        </div>
       </section>
 
       {/* ════════════════════════════════════════════
@@ -824,10 +743,14 @@ export default function HomePage() {
       {/* ════════════════════════════════════════════
           SECTION 5 — TOOLS TEASER
       ════════════════════════════════════════════ */}
-      <section style={{ padding: '120px 8vw', position: 'relative' }}>
+      <section style={{ padding: '120px 8vw', position: 'relative', overflow: 'hidden' }}>
+        {/* Mars terrain background */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+          <MarsScene />
+        </div>
         <div
           className="tools-layout"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '72px' }}
+          style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '72px' }}
         >
           <motion.div {...inView(0)} style={{ flexShrink: 0 }}>
             <h2 style={{
