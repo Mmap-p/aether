@@ -14,14 +14,11 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+const analytics = isSupported().then(yes => yes ? getAnalytics(app) : null);
 
-// Analytics is browser-only — SSR/Node environments don't support it
-export const analyticsPromise =
-  typeof window !== "undefined" ? isSupported().then((yes) => (yes ? getAnalytics(app) : null)) : Promise.resolve(null);
-
-export { app };
+export { app, auth, db, storage, analytics };
