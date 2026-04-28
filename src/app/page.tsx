@@ -1,40 +1,12 @@
 'use client';
 
 import { motion, type Transition } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import PageWrapper from '@/components/layout/PageWrapper';
 
-const SpaceScene = dynamic(() => import('@/components/stars/SpaceScene'), {
-  ssr: false,
-  loading: () => (
-    <div style={{
-      position: 'absolute', right: 0, top: 0, width: '60%', height: '100%',
-      background: 'rgba(255,255,255,0.018)', borderRadius: '0 16px 16px 0',
-    }} />
-  ),
-});
-
-const JWSTPanel = dynamic(() => import('@/components/stars/JWSTPanel'), {
-  ssr: false,
-  loading: () => (
-    <div style={{
-      height: '400px', marginTop: '2px',
-      background: 'rgba(255,255,255,0.018)',
-      border: '1px solid rgba(127,236,220,0.12)',
-      borderRadius: '16px',
-    }} />
-  ),
-});
-
-const MarsScene = dynamic(() => import('@/components/stars/MarsScene'), {
-  ssr: false,
-  loading: () => null,
-});
-
 // ─── Animation helpers ────────────────────────────────────────────────────────
 
-const ease: Transition = { duration: 0.7, ease: 'easeOut' } as Transition;
+const ease = { duration: 0.7, ease: 'easeOut' } as Transition;
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 32 },
@@ -45,161 +17,20 @@ const fadeUp = (delay = 0) => ({
 const inView = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-100px' },
+  viewport: { once: true, margin: '-80px' },
   transition: { ...ease, delay } as Transition,
 });
 
-// ─── Feed data ────────────────────────────────────────────────────────────────
+// ─── Asset URLs ───────────────────────────────────────────────────────────────
 
-const posts = [
-  {
-    initials: 'SC', color: '#7FECDC',
-    name: 'Dr. Sarah Chen', role: 'Astrophysicist · MIT', time: '2m',
-    content: 'Exceptional seeing tonight. M42 through my 10″ Dobsonian — the Trapezium fully resolved. H-α filter reveals the ionisation front with stunning clarity.',
-    tag: 'M42',
-  },
-  {
-    initials: 'AW', color: '#C084FC',
-    name: 'AstroWatch', role: 'Automated Alert', time: '8m',
-    content: '🛰 ISS visible over Mumbai at 21:47 IST. Max elevation 78°, magnitude −3.4, NNW→SSE. Clear skies confirmed. 3 min 14 sec of visibility.',
-    tag: 'ISS PASS',
-  },
-  {
-    initials: 'PM', color: '#FFD97D',
-    name: 'Prof. R. Mehta', role: 'ISRO · Sr. Scientist', time: '1h',
-    content: 'New JWST result: CO₂ detection at 4.3μm in TRAPPIST-1e atmosphere at 3.7σ significance. This changes the atmospheric characterisation game entirely.',
-    tag: 'arXiv 2026',
-  },
-  {
-    initials: 'RX', color: '#FF8FAB',
-    name: 'stargazer_rx', role: 'Amateur · Pune', time: '2h',
-    content: 'NGC 7331 — first light with my new APO refractor. Spiral arms clearly defined. The Deer Lick Group visible in the same field of view. Incredible night.',
-    tag: 'NGC 7331',
-  },
-  {
-    initials: 'OB', color: '#7FECDC',
-    name: 'Observatory Bot', role: 'Space Weather', time: '3h',
-    content: '🌌 Aurora alert: Kp-index 6.2. Visible at latitudes 55°N and above. NOAA SWPC confirms activity window of 4 hours. Capture window open now.',
-    tag: 'AURORA',
-  },
-];
+const HERO_PLANET = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEHIG8yRcnP6CWxLA5JWL_sn2cko1BIxF73sH0nE9XmzKHcD7OEgA1g90h4txSVmuSqgaqCFPWhaf2TBDb045sL-pfkavy-ERBJE2pUn0oGVN8sgG2Wj3jvC2-t2cvykwjWnakhJ1ZPwndQ4X-89wu8zVl2dgFeqYQnVOq69zxDHG6YQyyFJOZjUBIbvcx5M53IDjblTQHzmJ_B8xWgj_EnueoNqfY6yXWMbWPXd2Yr8-12D4-zvmrfTqe2r2Sh9b0rFhBcM7hF-Y';
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+const CARD_OBSERVE   = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEaKo7wRYBGLdLGYLddIctwcJILisj89kQrOXTwZnj7dq6tlmyvThuUIqXipjFiJlM202oPyVPeQFru2CRpD-GVI_eZ6VmKwUrlNn6w5zgoGaiW5us3rahP7Vw9Agq0bh19pWzQoj9984UztOYCHy984R167qEcYdATQOq1GRa13pUIMGMEl9ZvR-3Kk0l55Rp126pxvilxzxlynzhb2u5m0XeLeVSD_QKjEunoBkjFMl7RRtUxL6Yf6wyVhBrTmKzxtziIp2B8KY';
+const CARD_DISCOVER  = 'https://lh3.googleusercontent.com/aida-public/AB6AXuA7uBHf-u4AEOzwkkY2ph6drzSfMbNFT3iX4iK2lB_L1hrghjeT6TFCJGlTKITuzfdEoVl9Bp9ufVsTxKGTdreQtC_67OyCZsAbRxR1oOfZkfaVwKU2PFo4g9zmJz2P6risHukCi6fZ5XMYXnw8A3Wa1GHchYWbpT8gz6eh6LXUSWxV-MaQD_OWKWiXfmKWjCyJ9dQoY25zbH6hV38zRR-glUHFJELjIoPoRGds4AmqDYQKVbGoA4aj8PauEaxbqdlAgp6FlPFkBKY';
+const CARD_RESEARCH  = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCQ4o9qQ24V_Z21vb5hr_UGzDDKtCkEn3sS8vPvveM0iVii9_eXJJFVJR3pRigZpji4L_NTvRA_6swJ0iTJT3oIcfPZp4VbiWaMzzS8NOkesqXid2j8oQ4CVyTuwMXzTZiznmCK8j24vet2K4zcSo0cTI5KFUW_FGrfC8eePxFFffAXoW9DRFFq8DlutdpfKIrmgj8oJcaebWkoqAwlPxjWlle8C_LQTQO_hrpbr-6Lj2i1NkWWnKVNAXguIBJXR07ADdKT3W5qxw';
 
-function PostCard({ post }: { post: typeof posts[0] }) {
-  return (
-    <div style={{
-      background: 'rgba(255,255,255,0.03)',
-      border: '1px solid rgba(127,236,220,0.09)',
-      backdropFilter: 'blur(16px)',
-      WebkitBackdropFilter: 'blur(16px)',
-      borderRadius: '12px',
-      padding: '18px 20px',
-      flexShrink: 0,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '11px' }}>
-        <div style={{
-          width: '34px', height: '34px', borderRadius: '50%',
-          background: `${post.color}18`, border: `1px solid ${post.color}30`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'var(--font-mono)', fontSize: '10px', color: post.color,
-          flexShrink: 0,
-        }}>
-          {post.initials}
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 500, color: '#E8F0FF' }}>
-            {post.name}
-          </div>
-          <div style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'rgba(232,240,255,0.3)' }}>
-            {post.role}
-          </div>
-        </div>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'rgba(232,240,255,0.2)' }}>
-          {post.time}
-        </span>
-      </div>
-      <p style={{
-        fontFamily: 'var(--font-body)', fontSize: '12px',
-        color: 'rgba(232,240,255,0.6)', lineHeight: 1.65, margin: '0 0 11px',
-      }}>
-        {post.content}
-      </p>
-      <span style={{
-        fontFamily: 'var(--font-mono)', fontSize: '9px',
-        color: post.color, border: `1px solid ${post.color}28`,
-        background: `${post.color}08`, borderRadius: '99px', padding: '2px 8px',
-      }}>
-        {post.tag}
-      </span>
-    </div>
-  );
-}
-
-function ConstellationDots() {
-  const pts = [
-    { x: 55, y: 35 }, { x: 115, y: 72 }, { x: 88, y: 138 },
-    { x: 158, y: 118 }, { x: 198, y: 55 }, { x: 38, y: 98 },
-  ];
-  const lines = [[0,1],[1,2],[1,3],[3,4],[0,4],[2,5]];
-  return (
-    <svg width="240" height="175" viewBox="0 0 240 175" style={{ opacity: 0.65 }}>
-      {lines.map(([a, b], i) => (
-        <line key={i}
-          x1={pts[a].x} y1={pts[a].y} x2={pts[b].x} y2={pts[b].y}
-          stroke="rgba(192,132,252,0.18)" strokeWidth="0.6"
-        />
-      ))}
-      {pts.map((p, i) => (
-        <circle key={i} cx={p.x} cy={p.y} r="3.5" fill="#C084FC"
-          style={{ animation: `dotPulse 2.8s ease-in-out infinite ${(i * 0.38).toFixed(2)}s` }}
-        />
-      ))}
-    </svg>
-  );
-}
-
-function Spectrograph() {
-  const bars = Array.from({ length: 34 }, (_, i) => ({
-    h: 0.15 + Math.abs(Math.sin(i * 0.78 + 1)) * 0.85,
-    d: `${(i * 0.042).toFixed(3)}s`,
-  }));
-  return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '80px', paddingTop: '8px' }}>
-      {bars.map((bar, i) => (
-        <div key={i} style={{
-          width: '4px',
-          height: `${bar.h * 100}%`,
-          background: `rgba(255,217,125,${0.25 + bar.h * 0.55})`,
-          borderRadius: '2px 2px 0 0',
-          animation: `lineWave 2.2s ease-in-out infinite ${bar.d}`,
-          transformOrigin: 'bottom',
-        }} />
-      ))}
-    </div>
-  );
-}
-
-function TelescopeSVG() {
-  return (
-    <svg width="130" height="130" viewBox="0 0 130 130" fill="none"
-      style={{ animation: 'telescopeTilt 7s ease-in-out infinite' }}>
-      <rect x="18" y="55" width="76" height="16" rx="8"
-        fill="rgba(127,236,220,0.1)" stroke="rgba(127,236,220,0.38)" strokeWidth="1" />
-      <ellipse cx="94" cy="63" rx="10" ry="12"
-        fill="rgba(127,236,220,0.07)" stroke="rgba(127,236,220,0.5)" strokeWidth="1" />
-      <ellipse cx="94" cy="63" rx="5.5" ry="6.5" fill="rgba(127,236,220,0.3)"
-        style={{ animation: 'eyepieceGlow 3.5s ease-in-out infinite' }} />
-      <line x1="58" y1="71" x2="52" y2="104" stroke="rgba(127,236,220,0.28)" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="52" y1="104" x2="40" y2="104" stroke="rgba(127,236,220,0.28)" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="52" y1="104" x2="64" y2="104" stroke="rgba(127,236,220,0.28)" strokeWidth="1.5" strokeLinecap="round" />
-      {[[12,14],[32,8],[52,22],[102,12],[115,30]].map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r="1.5" fill="rgba(232,240,255,0.55)"
-          style={{ animation: `dotPulse 2s ease-in-out infinite ${(i * 0.28).toFixed(2)}s` }} />
-      ))}
-    </svg>
-  );
-}
+const FEED_IMG_1 = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrRHYGdP7ZATVoXFYYnS2mXudQvjTO4km9wnIrYkpHPuQAu-w98cslI8rLO-RNZwiBoFg7BeoysLExtezsqsw4cVAodk86AGYxLMr1C74hwIYZyCAkMbd5k03dwQcAYof2G0OKKXiwtGeWjITL9-IAccUIao-7ABbsJUyYXbKb7hkWfM7cDhkfieys01hevadLHnYKOIpwssf9NBqHTfjX3Bn7k9A2Y_h9q3V0YWDFOjYVBKYbuWnNkDHNRjb989J2HMt-sRsI9so';
+const FEED_IMG_2 = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD6m8qPIDCd-cajdNNT_NfeLJpHT0u7efd70Ksm7e-mpNBISxWaAAoO2g1C_eI2gye1KqsQeEZ3buprhl_Y_ZUwsoLtgWoYqk8nZJlPukHUmoKzasjBVKh-_kIm_DhUwzV-CKJ2U-mGqYup9xU9n8W4dcYNaIqFZPBKLfbbMQpxjDu9t1WvlmpOhpMtS6H43PoCaUXv0AglY9FkFObwMVw_MRX47X80fVBU88FnkD-o-ErkLQsCQ_HpXMZilwGtKUXpZDlWHDc';
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -207,139 +38,185 @@ export default function HomePage() {
   return (
     <PageWrapper>
       <style>{`
-        @keyframes feedScroll {
-          0%   { transform: translateY(0); }
-          100% { transform: translateY(-50%); }
+        .hero-planet {
+          mix-blend-mode: screen;
+          opacity: 0.8;
+          pointer-events: none;
+          user-select: none;
         }
-        @keyframes chevronBounce {
-          0%, 100% { transform: translateX(-50%) translateY(0px); opacity: 0.45; }
-          50%       { transform: translateX(-50%) translateY(10px); opacity: 0.9; }
+        .pillar-card {
+          position: relative;
+          overflow: hidden;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(127,236,220,0.1);
+          transition: border-color 300ms ease, background 300ms ease;
+          cursor: default;
         }
-        @keyframes ctaPulse {
-          0%, 100% { box-shadow: 0 0 20px rgba(127,236,220,0.08); }
-          50%       { box-shadow: 0 0 48px rgba(127,236,220,0.22), 0 0 80px rgba(127,236,220,0.08); }
+        .pillar-card:hover {
+          border-color: rgba(127,236,220,0.28);
+          background: rgba(255,255,255,0.055);
         }
-        @keyframes dotPulse {
-          0%, 100% { opacity: 0.45; transform: scale(1); }
-          50%       { opacity: 1;    transform: scale(1.45); }
+        .pillar-card .card-bg {
+          transition: opacity 400ms ease;
+          opacity: 0.18;
         }
-        @keyframes lineWave {
-          0%, 100% { transform: scaleY(0.25); opacity: 0.35; }
-          50%       { transform: scaleY(1);    opacity: 0.9;  }
+        .pillar-card:hover .card-bg {
+          opacity: 0.4;
         }
-        @keyframes telescopeTilt {
-          0%, 100% { transform: rotate(-3deg); }
-          50%       { transform: rotate(3deg);  }
+        .pillar-underline {
+          display: block;
+          height: 1.5px;
+          width: 0;
+          border-radius: 2px;
+          margin-top: 12px;
+          transition: width 400ms ease;
         }
-        @keyframes eyepieceGlow {
-          0%, 100% { opacity: 0.45; }
-          50%       { opacity: 1; filter: blur(1px); }
+        .pillar-card:hover .pillar-underline {
+          width: 100%;
+        }
+        .feed-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(127,236,220,0.1);
+          border-radius: 16px;
+          overflow: hidden;
+          flex-shrink: 0;
+          width: 400px;
+          transition: border-color 300ms ease;
+        }
+        .feed-card:hover {
+          border-color: rgba(127,236,220,0.28);
         }
         @keyframes livePulse {
           0%   { transform: scale(1); opacity: 0.7; }
-          100% { transform: scale(2.6); opacity: 0; }
+          100% { transform: scale(2.8); opacity: 0; }
         }
-
+        @keyframes ctaGlow {
+          0%, 100% { box-shadow: 0 0 24px rgba(127,236,220,0.18), 0 4px 20px rgba(0,0,0,0.4); }
+          50%       { box-shadow: 0 0 48px rgba(127,236,220,0.36), 0 4px 32px rgba(0,0,0,0.4); }
+        }
+        @keyframes chevronBounce {
+          0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.4; }
+          50%       { transform: translateX(-50%) translateY(10px); opacity: 0.9; }
+        }
         @media (max-width: 768px) {
-          .planet-wrap   { width: 280px !important; height: 280px !important; right: -140px !important; opacity: 0.55; }
-          .planet-sphere { width: 260px !important; height: 260px !important; top: 10px !important; left: 10px !important; }
-          .pillars-grid  { grid-template-columns: 1fr !important; }
-          .feed-layout   { flex-direction: column !important; height: auto !important; }
-          .feed-left     { position: relative !important; top: auto !important; height: auto !important; width: 100% !important; padding: 56px 6vw 32px !important; }
-          .feed-right    { width: 100% !important; height: 380px !important; padding-left: 6vw !important; }
-          .tools-layout  { flex-direction: column !important; gap: 40px !important; align-items: flex-start !important; }
+          .hero-grid { flex-direction: column !important; min-height: auto !important; padding-top: 100px !important; padding-bottom: 60px !important; }
+          .hero-planet-wrap { position: relative !important; right: auto !important; top: auto !important; transform: none !important; width: 100% !important; height: 280px !important; margin-top: 40px !important; }
+          .hero-planet { opacity: 0.5 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; }
+          .hero-gradient-overlay { display: none !important; }
+          .stats-row { flex-wrap: wrap !important; gap: 24px 0 !important; }
+          .stats-row > div { width: 50% !important; }
+          .pillars-grid { grid-template-columns: 1fr !important; }
+          .pillar-card { min-height: 360px !important; }
+          .feed-scroll { padding-bottom: 12px !important; }
+          .feed-scroll { -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+          .feed-card { scroll-snap-align: start; width: 85vw !important; min-width: 280px !important; }
+          .cta-panel { padding: 48px 6vw !important; }
+          .cta-heading { font-size: clamp(36px, 9vw, 60px) !important; }
+          .hero-heading { font-size: clamp(44px, 11vw, 72px) !important; }
+          .statement-text { font-size: clamp(32px, 8vw, 72px) !important; }
+        }
+        @media (min-width: 769px) {
+          .hero-right-col { display: block !important; }
         }
       `}</style>
 
       {/* ════════════════════════════════════════════
           SECTION 1 — HERO
       ════════════════════════════════════════════ */}
-      <section style={{
-        minHeight: '100vh',
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 8vw',
-        overflow: 'hidden',
-      }}>
-        <SpaceScene />
-
-        {/* Left content */}
-        <div style={{ position: 'relative', zIndex: 10, maxWidth: '580px', paddingTop: '64px', paddingBottom: '100px' }}>
-
-          {/* Origin label */}
+      <section
+        className="hero-grid"
+        style={{
+          minHeight: '100vh',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 6vw',
+          overflow: 'hidden',
+          gap: '0',
+        }}
+      >
+        {/* Left column */}
+        <div style={{
+          position: 'relative',
+          zIndex: 10,
+          flex: '0 0 auto',
+          width: 'min(580px, 58%)',
+          paddingTop: '80px',
+          paddingBottom: '100px',
+        }}>
+          {/* Label */}
           <motion.div {...fadeUp(0)} style={{
-            fontFamily: 'var(--font-mono)', fontSize: '10px',
-            color: '#7FECDC', letterSpacing: '0.22em', marginBottom: '32px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '10px',
+            color: '#7FECDC',
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            marginBottom: '32px',
           }}>
-            EST. 2025 · MUMBAI · EARTH
+            Est. 2025 · Mumbai · Earth
           </motion.div>
 
           {/* Headline */}
-          <div style={{ overflow: 'hidden' }}>
-            <motion.div
-              initial={{ opacity: 0, y: 48 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.1, ease: 'easeOut' } as Transition}
-            >
-              <h1 style={{ margin: 0, padding: 0 }}>
-                <div style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(52px, 7.5vw, 96px)',
-                  fontWeight: 300,
-                  letterSpacing: '-0.01em',
-                  lineHeight: 1.0,
-                  color: '#E8F0FF',
-                  marginBottom: '2px',
-                }}>
-                  THE COSMOS
-                </div>
-                <div style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(52px, 7.5vw, 96px)',
-                  fontWeight: 300,
-                  fontStyle: 'italic',
-                  letterSpacing: '-0.01em',
-                  lineHeight: 1.0,
-                  background: 'linear-gradient(130deg, #7FECDC 0%, #C084FC 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  filter: 'drop-shadow(0 0 48px rgba(127,236,220,0.28))',
-                }}>
-                  IS SOCIAL NOW
-                </div>
-              </h1>
-            </motion.div>
-          </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.1, ease: 'easeOut' } as Transition}
+            className="hero-heading"
+            style={{
+              margin: 0, padding: 0,
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(48px, 6.5vw, 88px)',
+              fontWeight: 300,
+              letterSpacing: '-0.01em',
+              lineHeight: 1.0,
+            }}
+          >
+            <div style={{ color: '#E8F0FF', marginBottom: '4px' }}>THE COSMOS IS</div>
+            <div style={{
+              fontStyle: 'italic',
+              background: 'linear-gradient(130deg, #7FECDC 0%, #C084FC 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              filter: 'drop-shadow(0 0 40px rgba(127,236,220,0.28))',
+            }}>
+              SOCIAL NOW
+            </div>
+          </motion.h1>
 
           {/* Subtext */}
-          <motion.p {...fadeUp(0.55)} style={{
-            fontFamily: 'var(--font-body)', fontSize: '18px',
-            color: 'rgba(232,240,255,0.52)', maxWidth: '460px',
-            lineHeight: 1.75, margin: '28px 0 0',
+          <motion.p {...fadeUp(0.4)} style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '17px',
+            color: 'rgba(232,240,255,0.52)',
+            maxWidth: '460px',
+            lineHeight: 1.75,
+            margin: '28px 0 0',
           }}>
             Join the scientists, astronomers, and dreamers mapping humanity&apos;s
-            relationship with the universe.
+            relationship with the universe. Real observations. Real discoveries.
           </motion.p>
 
-          {/* CTAs */}
-          <motion.div {...fadeUp(0.75)} style={{ display: 'flex', gap: '12px', marginTop: '36px', flexWrap: 'wrap' }}>
+          {/* CTA buttons */}
+          <motion.div {...fadeUp(0.58)} style={{
+            display: 'flex', gap: '12px', marginTop: '36px', flexWrap: 'wrap',
+          }}>
             <Link href="/auth/signup" style={{ textDecoration: 'none' }}>
               <motion.div
-                whileHover={{ borderColor: 'rgba(127,236,220,0.52)', background: 'rgba(127,236,220,0.07)' }}
+                whileHover={{ borderColor: 'rgba(127,236,220,0.55)', background: 'rgba(127,236,220,0.09)' }}
                 whileTap={{ scale: 0.97 }}
                 style={{
                   display: 'inline-flex', alignItems: 'center',
                   background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(127,236,220,0.28)',
+                  border: '1px solid rgba(127,236,220,0.32)',
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
                   borderRadius: '12px',
                   padding: '14px 34px',
-                  fontFamily: 'var(--font-body)', fontSize: '16px',
+                  fontFamily: 'var(--font-body)', fontSize: '15px',
                   color: '#7FECDC', cursor: 'pointer',
                   transition: 'all 220ms ease',
+                  animation: 'ctaGlow 3.5s ease-in-out infinite',
                 }}
               >
                 Enter ÆTHER
@@ -347,7 +224,7 @@ export default function HomePage() {
             </Link>
 
             <motion.div
-              whileHover={{ borderColor: 'rgba(255,255,255,0.18)' }}
+              whileHover={{ borderColor: 'rgba(255,255,255,0.2)' }}
               whileTap={{ scale: 0.97 }}
               onClick={() => document.getElementById('statement')?.scrollIntoView({ behavior: 'smooth' })}
               style={{
@@ -356,7 +233,7 @@ export default function HomePage() {
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '12px',
                 padding: '14px 28px',
-                fontFamily: 'var(--font-body)', fontSize: '16px',
+                fontFamily: 'var(--font-body)', fontSize: '15px',
                 color: 'rgba(232,240,255,0.42)', cursor: 'pointer',
                 transition: 'all 220ms ease',
               }}
@@ -367,10 +244,9 @@ export default function HomePage() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <div style={{
-                  width: 0, height: 0,
-                  borderStyle: 'solid',
+                  width: 0, height: 0, borderStyle: 'solid',
                   borderWidth: '5px 0 5px 9px',
-                  borderColor: 'transparent transparent transparent rgba(232,240,255,0.45)',
+                  borderColor: 'transparent transparent transparent rgba(232,240,255,0.5)',
                   marginLeft: '2px',
                 }} />
               </div>
@@ -379,24 +255,20 @@ export default function HomePage() {
           </motion.div>
 
           {/* Stats row */}
-          <motion.div {...fadeUp(0.95)} style={{
+          <motion.div {...fadeUp(0.75)} className="stats-row" style={{
             display: 'flex',
-            marginTop: '56px',
+            marginTop: '52px',
             paddingTop: '28px',
-            borderTop: '1px solid rgba(255,255,255,0.06)',
+            borderTop: '1px solid rgba(255,255,255,0.07)',
           }}>
             {[
-              { num: '2,847', label: 'Observers', color: '#7FECDC' },
+              { num: '2,847', label: 'Observers',      color: '#7FECDC' },
               { num: '14K+',  label: 'Objects Logged', color: '#C084FC' },
               { num: '891',   label: 'Papers Discussed', color: '#FFD97D' },
             ].map((s, i) => (
               <div key={s.label} style={{ display: 'flex', alignItems: 'center' }}>
                 {i > 0 && (
-                  <div style={{
-                    width: '1px', height: '38px',
-                    background: 'rgba(255,255,255,0.07)',
-                    margin: '0 28px',
-                  }} />
+                  <div style={{ width: '1px', height: '38px', background: 'rgba(255,255,255,0.07)', margin: '0 24px' }} />
                 )}
                 <div>
                   <div style={{
@@ -413,502 +285,654 @@ export default function HomePage() {
           </motion.div>
         </div>
 
+        {/* Right column — planet image */}
+        <div
+          className="hero-right-col hero-planet-wrap"
+          style={{
+            position: 'absolute',
+            right: '-40px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '52%',
+            maxWidth: '700px',
+            height: '100%',
+            zIndex: 1,
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Left-to-right gradient overlay so planet fades into page */}
+          <div
+            className="hero-gradient-overlay"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to right, #05091A 0%, transparent 40%)',
+              zIndex: 2,
+            }}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={HERO_PLANET}
+            alt="Space planet"
+            crossOrigin="anonymous"
+            className="hero-planet"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+            }}
+          />
+        </div>
+
         {/* Scroll indicator */}
         <div style={{
           position: 'absolute', bottom: '32px', left: '50%',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '7px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
           animation: 'chevronBounce 2.2s ease-in-out infinite',
+          zIndex: 10,
         }}>
           <span style={{
             fontFamily: 'var(--font-mono)', fontSize: '9px',
-            color: 'rgba(127,236,220,0.38)', letterSpacing: '0.22em',
+            color: 'rgba(127,236,220,0.4)', letterSpacing: '0.22em',
           }}>SCROLL</span>
-          <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
-            <path d="M1 1l7 7 7-7" stroke="rgba(127,236,220,0.38)" strokeWidth="1.5"
+          <svg width="14" height="9" viewBox="0 0 14 9" fill="none">
+            <path d="M1 1l6 6 6-6" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5"
               strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </section>
 
       {/* ════════════════════════════════════════════
-          SECTION 2 — STATEMENT
+          SECTION 2 — BOLD STATEMENT
       ════════════════════════════════════════════ */}
       <section
         id="statement"
         style={{
-          minHeight: '80vh',
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          textAlign: 'center',
-          padding: '80px 6vw',
-          background: 'linear-gradient(90deg, rgba(127,236,220,0.025) 0%, rgba(192,132,252,0.025) 100%)',
-          overflow: 'hidden',
+          background: '#080d1e',
+          padding: '100px 8vw',
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.85, ease: 'easeOut' } as Transition}
-        >
-          <div style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(38px, 7.5vw, 118px)',
-            fontWeight: 300,
-            letterSpacing: '0.05em',
-            lineHeight: 1.05,
-          }}>
-            <div style={{ color: 'rgba(232,240,255,0.07)' }}>SCIENCE IS BETTER</div>
-            <div>
-              <span style={{ color: 'rgba(232,240,255,0.07)' }}>WHEN IT&apos;S </span>
-              <span style={{
-                color: '#E8F0FF',
-                filter: 'drop-shadow(0 0 60px rgba(127,236,220,0.5)) drop-shadow(0 0 20px rgba(127,236,220,0.3))',
-              }}>
-                SHARED
-              </span>
-            </div>
-          </div>
-        </motion.div>
+        {/* Subtle radial glow */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(127,236,220,0.04) 0%, transparent 70%)',
+        }} />
 
-        <motion.div
-          {...inView(0.3)}
-          style={{
-            marginTop: '52px',
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(127,236,220,0.1)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            borderRadius: '99px',
-            padding: '14px 32px',
-          }}
-        >
-          <p style={{
-            fontFamily: 'var(--font-body)', fontSize: '15px',
-            color: 'rgba(232,240,255,0.42)', margin: 0, lineHeight: 1.65,
-            maxWidth: '400px',
+        <motion.div {...inView(0)} style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+          {/* Mission label */}
+          <div style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            color: '#7FECDC',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            marginBottom: '40px',
+            opacity: 0.8,
           }}>
+            [ Mission Protocol ]
+          </div>
+
+          {/* Giant statement */}
+          <div
+            className="statement-text"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(36px, 6.5vw, 96px)',
+              fontWeight: 300,
+              letterSpacing: '0.03em',
+              lineHeight: 1.08,
+              color: '#E8F0FF',
+            }}
+          >
+            <span style={{ color: 'rgba(232,240,255,0.18)' }}>SCIENCE IS BETTER</span>
+            <br />
+            <span style={{ color: 'rgba(232,240,255,0.18)' }}>WHEN IT&apos;S </span>
+            <span style={{
+              color: '#7FECDC',
+              filter: 'drop-shadow(0 0 40px rgba(127,236,220,0.5)) drop-shadow(0 0 16px rgba(127,236,220,0.3))',
+            }}>SHARED.</span>
+          </div>
+
+          <motion.p
+            {...inView(0.25)}
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '15px',
+              color: 'rgba(232,240,255,0.38)',
+              maxWidth: '440px',
+              margin: '40px auto 0',
+              lineHeight: 1.75,
+            }}
+          >
             Since the first telescope, science has been social. ÆTHER makes it digital.
-          </p>
+          </motion.p>
         </motion.div>
       </section>
 
       {/* ════════════════════════════════════════════
-          SECTION 3 — THREE PILLARS
+          SECTION 3 — THREE TALL PILLAR CARDS
       ════════════════════════════════════════════ */}
       <section style={{ overflow: 'hidden' }}>
         <div
           className="pillars-grid"
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
         >
-          {/* 01 OBSERVE */}
-          <motion.div
-            {...inView(0)}
-            style={{
-              minHeight: '480px', padding: '48px 44px',
-              background: 'rgba(127,236,220,0.018)',
-              border: '1px solid rgba(127,236,220,0.1)',
-              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-              position: 'relative', overflow: 'hidden',
-            }}
-          >
+          {/* 01 — OBSERVE */}
+          <motion.div {...inView(0)} className="pillar-card" style={{ minHeight: '600px' }}>
+            {/* Background image */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={CARD_OBSERVE}
+              alt=""
+              crossOrigin="anonymous"
+              aria-hidden="true"
+              className="card-bg"
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                objectFit: 'cover', objectPosition: 'center',
+              }}
+            />
+            {/* Dark gradient overlay */}
             <div style={{
-              position: 'absolute', top: '-24px', left: '20px',
-              fontFamily: 'var(--font-display)', fontSize: '170px', fontWeight: 300,
-              color: 'rgba(127,236,220,0.055)', lineHeight: 1,
-              userSelect: 'none', pointerEvents: 'none',
-            }}>01</div>
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <TelescopeSVG />
-            </div>
-            <div style={{ position: 'relative', zIndex: 1 }}>
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to top, rgba(5,9,26,0.95) 0%, rgba(5,9,26,0.55) 60%, rgba(5,9,26,0.2) 100%)',
+              zIndex: 1,
+            }} />
+            {/* Content */}
+            <div style={{
+              position: 'relative', zIndex: 2,
+              height: '100%', display: 'flex', flexDirection: 'column',
+              justifyContent: 'space-between', padding: '40px 40px 48px',
+            }}>
+              {/* Number watermark */}
               <div style={{
-                fontFamily: 'var(--font-mono)', fontSize: '11px',
-                color: '#7FECDC', letterSpacing: '0.2em', marginBottom: '14px',
-              }}>OBSERVE</div>
-              <h3 style={{
-                fontFamily: 'var(--font-display)', fontSize: '32px',
-                fontWeight: 300, color: '#E8F0FF', margin: '0 0 14px',
-              }}>Share what you see</h3>
-              <p style={{
-                fontFamily: 'var(--font-body)', fontSize: '14px',
-                color: 'rgba(232,240,255,0.42)', lineHeight: 1.75, margin: 0,
-              }}>
-                Structured observation posts linked to real catalog IDs. Your M42 is the M42.
-              </p>
+                fontFamily: 'var(--font-display)', fontSize: '140px', fontWeight: 300,
+                color: 'rgba(127,236,220,0.07)', lineHeight: 1, userSelect: 'none',
+                marginTop: '-16px', marginLeft: '-8px',
+              }}>01</div>
+
+              <div>
+                {/* Pill */}
+                <span style={{
+                  display: 'inline-block',
+                  fontFamily: 'var(--font-mono)', fontSize: '10px',
+                  color: '#7FECDC', border: '1px solid rgba(127,236,220,0.3)',
+                  background: 'rgba(127,236,220,0.08)',
+                  borderRadius: '99px', padding: '3px 12px',
+                  letterSpacing: '0.08em', marginBottom: '20px',
+                }}>01 / REAL-TIME</span>
+
+                <h3 style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(36px, 3.8vw, 60px)',
+                  fontWeight: 300, color: '#E8F0FF',
+                  margin: '0 0 14px', lineHeight: 1.1,
+                }}>OBSERVE</h3>
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '14px',
+                  color: 'rgba(232,240,255,0.52)', lineHeight: 1.75, margin: 0,
+                  maxWidth: '280px',
+                }}>
+                  Structured observation posts linked to real catalog IDs.
+                  Your M42 is the M42. Share what you see.
+                </p>
+                <span className="pillar-underline" style={{ background: '#7FECDC' }} />
+              </div>
             </div>
           </motion.div>
 
-          {/* 02 DISCOVER */}
-          <motion.div
-            {...inView(0.15)}
-            style={{
-              minHeight: '480px', padding: '48px 44px',
-              background: 'rgba(192,132,252,0.018)',
-              border: '1px solid rgba(192,132,252,0.1)',
-              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-              position: 'relative', overflow: 'hidden',
-            }}
-          >
+          {/* 02 — DISCOVER */}
+          <motion.div {...inView(0.12)} className="pillar-card" style={{ minHeight: '600px' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={CARD_DISCOVER}
+              alt=""
+              crossOrigin="anonymous"
+              aria-hidden="true"
+              className="card-bg"
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                objectFit: 'cover', objectPosition: 'center',
+              }}
+            />
             <div style={{
-              position: 'absolute', top: '-24px', left: '20px',
-              fontFamily: 'var(--font-display)', fontSize: '170px', fontWeight: 300,
-              color: 'rgba(192,132,252,0.055)', lineHeight: 1,
-              userSelect: 'none', pointerEvents: 'none',
-            }}>02</div>
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <ConstellationDots />
-            </div>
-            <div style={{ position: 'relative', zIndex: 1 }}>
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to top, rgba(5,9,26,0.95) 0%, rgba(5,9,26,0.55) 60%, rgba(5,9,26,0.2) 100%)',
+              zIndex: 1,
+            }} />
+            <div style={{
+              position: 'relative', zIndex: 2,
+              height: '100%', display: 'flex', flexDirection: 'column',
+              justifyContent: 'space-between', padding: '40px 40px 48px',
+            }}>
               <div style={{
-                fontFamily: 'var(--font-mono)', fontSize: '11px',
-                color: '#C084FC', letterSpacing: '0.2em', marginBottom: '14px',
-              }}>DISCOVER</div>
-              <h3 style={{
-                fontFamily: 'var(--font-display)', fontSize: '32px',
-                fontWeight: 300, color: '#E8F0FF', margin: '0 0 14px',
-              }}>Find your people</h3>
-              <p style={{
-                fontFamily: 'var(--font-body)', fontSize: '14px',
-                color: 'rgba(232,240,255,0.42)', lineHeight: 1.75, margin: 0,
-              }}>
-                Follow objects, not just people. Get notified when someone observes YOUR target.
-              </p>
+                fontFamily: 'var(--font-display)', fontSize: '140px', fontWeight: 300,
+                color: 'rgba(192,132,252,0.07)', lineHeight: 1, userSelect: 'none',
+                marginTop: '-16px', marginLeft: '-8px',
+              }}>02</div>
+
+              <div>
+                <span style={{
+                  display: 'inline-block',
+                  fontFamily: 'var(--font-mono)', fontSize: '10px',
+                  color: '#C084FC', border: '1px solid rgba(192,132,252,0.3)',
+                  background: 'rgba(192,132,252,0.08)',
+                  borderRadius: '99px', padding: '3px 12px',
+                  letterSpacing: '0.08em', marginBottom: '20px',
+                }}>02 / EXOPLANETS</span>
+
+                <h3 style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(36px, 3.8vw, 60px)',
+                  fontWeight: 300, color: '#E8F0FF',
+                  margin: '0 0 14px', lineHeight: 1.1,
+                }}>DISCOVER</h3>
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '14px',
+                  color: 'rgba(232,240,255,0.52)', lineHeight: 1.75, margin: 0,
+                  maxWidth: '280px',
+                }}>
+                  Follow objects, not just people. Get notified when someone
+                  observes your target.
+                </p>
+                <span className="pillar-underline" style={{ background: '#C084FC' }} />
+              </div>
             </div>
           </motion.div>
 
-          {/* 03 RESEARCH */}
-          <motion.div
-            {...inView(0.3)}
-            style={{
-              minHeight: '480px', padding: '48px 44px',
-              background: 'rgba(255,217,125,0.018)',
-              border: '1px solid rgba(255,217,125,0.1)',
-              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-              position: 'relative', overflow: 'hidden',
-            }}
-          >
+          {/* 03 — RESEARCH */}
+          <motion.div {...inView(0.24)} className="pillar-card" style={{ minHeight: '600px' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={CARD_RESEARCH}
+              alt=""
+              crossOrigin="anonymous"
+              aria-hidden="true"
+              className="card-bg"
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                objectFit: 'cover', objectPosition: 'center',
+              }}
+            />
             <div style={{
-              position: 'absolute', top: '-24px', left: '20px',
-              fontFamily: 'var(--font-display)', fontSize: '170px', fontWeight: 300,
-              color: 'rgba(255,217,125,0.055)', lineHeight: 1,
-              userSelect: 'none', pointerEvents: 'none',
-            }}>03</div>
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <Spectrograph />
-            </div>
-            <div style={{ position: 'relative', zIndex: 1 }}>
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to top, rgba(5,9,26,0.95) 0%, rgba(5,9,26,0.55) 60%, rgba(5,9,26,0.2) 100%)',
+              zIndex: 1,
+            }} />
+            <div style={{
+              position: 'relative', zIndex: 2,
+              height: '100%', display: 'flex', flexDirection: 'column',
+              justifyContent: 'space-between', padding: '40px 40px 48px',
+            }}>
               <div style={{
-                fontFamily: 'var(--font-mono)', fontSize: '11px',
-                color: '#FFD97D', letterSpacing: '0.2em', marginBottom: '14px',
-              }}>RESEARCH</div>
-              <h3 style={{
-                fontFamily: 'var(--font-display)', fontSize: '32px',
-                fontWeight: 300, color: '#E8F0FF', margin: '0 0 14px',
-              }}>Stay at the frontier</h3>
-              <p style={{
-                fontFamily: 'var(--font-body)', fontSize: '14px',
-                color: 'rgba(232,240,255,0.42)', lineHeight: 1.75, margin: 0,
-              }}>
-                Latest ArXiv papers, discussion threads, and citations — all in one feed.
-              </p>
+                fontFamily: 'var(--font-display)', fontSize: '140px', fontWeight: 300,
+                color: 'rgba(255,217,125,0.07)', lineHeight: 1, userSelect: 'none',
+                marginTop: '-16px', marginLeft: '-8px',
+              }}>03</div>
+
+              <div>
+                <span style={{
+                  display: 'inline-block',
+                  fontFamily: 'var(--font-mono)', fontSize: '10px',
+                  color: '#FFD97D', border: '1px solid rgba(255,217,125,0.3)',
+                  background: 'rgba(255,217,125,0.08)',
+                  borderRadius: '99px', padding: '3px 12px',
+                  letterSpacing: '0.08em', marginBottom: '20px',
+                }}>03 / ACADEMIC</span>
+
+                <h3 style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(36px, 3.8vw, 60px)',
+                  fontWeight: 300, color: '#E8F0FF',
+                  margin: '0 0 14px', lineHeight: 1.1,
+                }}>RESEARCH</h3>
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '14px',
+                  color: 'rgba(232,240,255,0.52)', lineHeight: 1.75, margin: 0,
+                  maxWidth: '280px',
+                }}>
+                  Latest ArXiv papers, discussion threads, and citations —
+                  all in one live feed.
+                </p>
+                <span className="pillar-underline" style={{ background: '#FFD97D' }} />
+              </div>
             </div>
           </motion.div>
-        </div>
-
-        {/* JWST Pillars of Creation — full-width fourth card */}
-        <div style={{ padding: '0 0' }}>
-          <JWSTPanel />
         </div>
       </section>
 
       {/* ════════════════════════════════════════════
-          SECTION 4 — LIVE FEED STRIP
+          SECTION 4 — LIVE FEED
       ════════════════════════════════════════════ */}
-      <section
-        className="feed-layout"
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          height: '100vh',
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-      >
-        {/* Left — sticky text */}
-        <div
-          className="feed-left"
-          style={{
-            width: '40%',
-            position: 'sticky',
-            top: 0,
-            height: '100vh',
-            display: 'flex', flexDirection: 'column', justifyContent: 'center',
-            padding: '0 5vw',
-            zIndex: 10,
-          }}
-        >
-          <motion.div {...inView(0)}>
-            <div style={{
-              fontFamily: 'var(--font-mono)', fontSize: '10px',
-              color: '#7FECDC', letterSpacing: '0.2em',
-              display: 'flex', alignItems: 'center', gap: '8px',
-              marginBottom: '22px',
-            }}>
-              <span style={{ position: 'relative', display: 'inline-flex', width: '7px', height: '7px' }}>
-                <span style={{
-                  position: 'absolute', inset: 0,
-                  borderRadius: '50%', background: '#7FECDC', opacity: 0.45,
-                  animation: 'livePulse 1.8s ease-out infinite',
-                }} />
-                <span style={{
-                  width: '7px', height: '7px', borderRadius: '50%',
-                  background: '#7FECDC', display: 'block', position: 'relative', zIndex: 1,
-                }} />
-              </span>
-              LIVE FROM THE COMMUNITY
-            </div>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(30px, 3.8vw, 54px)',
-              fontWeight: 300, color: '#E8F0FF',
-              lineHeight: 1.12, margin: '0 0 20px',
-            }}>
-              This is happening<br />right now
-            </h2>
-            <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '15px',
-              color: 'rgba(232,240,255,0.42)', lineHeight: 1.75,
-              margin: '0 0 32px', maxWidth: '300px',
-            }}>
-              Real scientists. Real observations. Real discoveries. Updated every minute.
-            </p>
-            <Link href="/auth/signup" style={{ textDecoration: 'none' }}>
-              <motion.div
-                whileHover={{ borderColor: 'rgba(127,236,220,0.38)' }}
-                whileTap={{ scale: 0.97 }}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  border: '1px solid rgba(127,236,220,0.16)',
-                  borderRadius: '10px', padding: '11px 22px',
-                  fontFamily: 'var(--font-body)', fontSize: '14px', color: '#7FECDC',
-                  transition: 'all 220ms ease',
-                }}
-              >
-                Join the conversation
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M1 7h12M8 2l5 5-5 5" stroke="#7FECDC" strokeWidth="1.5"
-                    strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </motion.div>
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Right — auto-scroll feed */}
-        <div
-          className="feed-right"
-          style={{
-            width: '60%',
-            height: '100vh',
-            overflow: 'hidden',
-            position: 'relative',
-            paddingLeft: '24px',
-          }}
-        >
+      <section style={{ padding: '100px 6vw', overflow: 'hidden' }}>
+        {/* Header */}
+        <motion.div {...inView(0)} style={{ marginBottom: '48px' }}>
           <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: '130px',
-            background: 'linear-gradient(to bottom, #05091A, transparent)',
-            zIndex: 2, pointerEvents: 'none',
-          }} />
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0, height: '130px',
-            background: 'linear-gradient(to top, #05091A, transparent)',
-            zIndex: 2, pointerEvents: 'none',
-          }} />
-
-          <div style={{
-            display: 'flex', flexDirection: 'column', gap: '14px',
-            padding: '60px 40px 60px 0',
-            animation: 'feedScroll 30s linear infinite',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            fontFamily: 'var(--font-mono)', fontSize: '10px',
+            color: '#7FECDC', letterSpacing: '0.2em',
+            textTransform: 'uppercase', marginBottom: '14px',
           }}>
-            {[...posts, ...posts].map((post, i) => (
-              <PostCard key={i} post={post} />
-            ))}
+            <span style={{ position: 'relative', display: 'inline-flex', width: '7px', height: '7px' }}>
+              <span style={{
+                position: 'absolute', inset: 0, borderRadius: '50%',
+                background: '#7FECDC', opacity: 0.5,
+                animation: 'livePulse 1.8s ease-out infinite',
+              }} />
+              <span style={{
+                width: '7px', height: '7px', borderRadius: '50%',
+                background: '#7FECDC', display: 'block', position: 'relative', zIndex: 1,
+              }} />
+            </span>
+            Telemetry Stream
           </div>
-        </div>
-      </section>
 
-      {/* ════════════════════════════════════════════
-          SECTION 5 — TOOLS TEASER
-      ════════════════════════════════════════════ */}
-      <section style={{ padding: '120px 8vw', position: 'relative', overflow: 'hidden' }}>
-        {/* Mars terrain background */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-          <MarsScene />
-        </div>
-        <div
-          className="tools-layout"
-          style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '72px' }}
-        >
-          <motion.div {...inView(0)} style={{ flexShrink: 0 }}>
-            <h2 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(38px, 5vw, 72px)',
-              fontWeight: 300, color: '#E8F0FF',
-              lineHeight: 1.1, margin: 0,
-            }}>
-              Seven tools.
-              <br />
-              <span style={{ color: 'rgba(232,240,255,0.35)' }}>Zero compromises.</span>
-            </h2>
-          </motion.div>
+          <h2 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(28px, 3.5vw, 52px)',
+            fontWeight: 300, color: '#E8F0FF',
+            margin: 0, lineHeight: 1.1,
+          }}>Live Observation Feed</h2>
+        </motion.div>
 
-          <motion.div
-            {...inView(0.2)}
-            style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', maxWidth: '520px' }}
-          >
-            {[
-              { icon: '🛰', name: 'ISS Tracker',    tag: 'LIVE',        color: '#7FECDC' },
-              { icon: '🌌', name: 'Sky Events',      tag: 'FREE',        color: '#C084FC' },
-              { icon: '☀️', name: 'Space Weather',   tag: 'REALTIME',    color: '#FFD97D' },
-              { icon: '🔭', name: 'Solar System',    tag: 'INTERACTIVE', color: '#7FECDC' },
-              { icon: '📄', name: 'ArXiv Feed',      tag: 'DAILY',       color: '#C084FC' },
-              { icon: '🌅', name: 'APOD',            tag: 'BEAUTIFUL',   color: '#FFD97D' },
-              { icon: '📋', name: 'Obs. Planner',    tag: 'PRO',         color: '#FF8FAB' },
-            ].map((tool) => (
-              <motion.div
-                key={tool.name}
-                whileHover={{
-                  borderColor: `${tool.color}38`,
-                  background: `${tool.color}07`,
-                }}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '10px',
-                  background: 'rgba(255,255,255,0.025)',
-                  border: '1px solid rgba(127,236,220,0.1)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  borderRadius: '12px', padding: '12px 18px',
-                  cursor: 'default', transition: 'all 200ms ease',
-                }}
-              >
-                <span style={{ fontSize: '18px' }}>{tool.icon}</span>
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: '#E8F0FF' }}>
-                  {tool.name}
-                </span>
-                <span style={{
-                  fontFamily: 'var(--font-mono)', fontSize: '9px', color: tool.color,
-                  border: `1px solid ${tool.color}28`,
-                  borderRadius: '99px', padding: '2px 7px', letterSpacing: '0.06em',
-                }}>{tool.tag}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        <motion.p
-          {...inView(0.4)}
+        {/* Cards — horizontal scroll on mobile, row on desktop */}
+        <motion.div
+          {...inView(0.15)}
+          className="feed-scroll"
           style={{
-            fontFamily: 'var(--font-body)', fontSize: '14px',
-            color: 'rgba(232,240,255,0.28)',
-            textAlign: 'center', marginTop: '72px', letterSpacing: '0.02em',
+            display: 'flex',
+            gap: '16px',
+            overflowX: 'auto',
+            paddingBottom: '4px',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
           }}
         >
-          All powered by NASA, JPL, and ESA open data. Free forever for the basics.
-        </motion.p>
+          {/* Card 1 — Dr. Sarah Vance */}
+          <div className="feed-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={FEED_IMG_1}
+              alt="Solar flare observation"
+              crossOrigin="anonymous"
+              style={{ width: '100%', height: '200px', objectFit: 'cover', display: 'block' }}
+            />
+            <div style={{ padding: '20px 20px 22px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <div style={{
+                  width: '34px', height: '34px', borderRadius: '50%',
+                  background: 'rgba(127,236,220,0.12)',
+                  border: '1px solid rgba(127,236,220,0.28)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#7FECDC',
+                  flexShrink: 0,
+                }}>SV</div>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: '#E8F0FF' }}>
+                    Dr. Sarah Vance
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(232,240,255,0.35)' }}>
+                    Mauna Kea Observatory
+                  </div>
+                </div>
+              </div>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px',
+                color: 'rgba(232,240,255,0.6)', lineHeight: 1.65, margin: '0 0 14px',
+              }}>
+                Unexpected solar flare activity detected at 0847 UTC. X2.3 class event
+                with associated CME — likely Aurora visible at high latitudes this weekend.
+              </p>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '11px',
+                  color: 'rgba(232,240,255,0.4)',
+                }}>❤ 1.2k</span>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '11px',
+                  color: 'rgba(232,240,255,0.4)',
+                }}>💬 84</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2 — Project Voyager */}
+          <div className="feed-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={FEED_IMG_2}
+              alt="Lunar south pole"
+              crossOrigin="anonymous"
+              style={{ width: '100%', height: '200px', objectFit: 'cover', display: 'block' }}
+            />
+            <div style={{ padding: '20px 20px 22px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <div style={{
+                  width: '34px', height: '34px', borderRadius: '50%',
+                  background: 'rgba(192,132,252,0.12)',
+                  border: '1px solid rgba(192,132,252,0.28)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#C084FC',
+                  flexShrink: 0,
+                }}>PV</div>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: '#E8F0FF' }}>
+                    Project Voyager
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(232,240,255,0.35)' }}>
+                    Deep Space Network
+                  </div>
+                </div>
+              </div>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px',
+                color: 'rgba(232,240,255,0.6)', lineHeight: 1.65, margin: '0 0 14px',
+              }}>
+                New high-res composites of Lunar south pole ice deposits released.
+                Permanently shadowed regions confirm water ice abundance exceeds
+                prior estimates by ~23%.
+              </p>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '11px',
+                  color: 'rgba(232,240,255,0.4)',
+                }}>❤ 3.5k</span>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '11px',
+                  color: 'rgba(232,240,255,0.4)',
+                }}>💬 210</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3 — AstroMetric_001 (no image — data viz placeholder) */}
+          <div className="feed-card">
+            {/* Data viz placeholder */}
+            <div style={{
+              width: '100%', height: '200px',
+              background: 'rgba(127,236,220,0.04)',
+              border: 'none',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              {/* Monitoring icon */}
+              <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                  <circle cx="24" cy="24" r="22" stroke="rgba(127,236,220,0.25)" strokeWidth="1" />
+                  <circle cx="24" cy="24" r="14" stroke="rgba(127,236,220,0.18)" strokeWidth="1" strokeDasharray="4 3" />
+                  <circle cx="24" cy="24" r="4" fill="rgba(127,236,220,0.6)" />
+                  <line x1="24" y1="2" x2="24" y2="10" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="24" y1="38" x2="24" y2="46" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="2" y1="24" x2="10" y2="24" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="38" y1="24" x2="46" y2="24" stroke="rgba(127,236,220,0.4)" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                <div style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '9px',
+                  color: 'rgba(127,236,220,0.5)', letterSpacing: '0.2em',
+                  marginTop: '10px', textTransform: 'uppercase',
+                }}>Gravitational · Analysis</div>
+              </div>
+              {/* Subtle grid lines */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                backgroundImage: 'linear-gradient(rgba(127,236,220,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(127,236,220,0.04) 1px, transparent 1px)',
+                backgroundSize: '24px 24px',
+              }} />
+            </div>
+            <div style={{ padding: '20px 20px 22px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <div style={{
+                  width: '34px', height: '34px', borderRadius: '50%',
+                  background: 'rgba(255,217,125,0.12)',
+                  border: '1px solid rgba(255,217,125,0.28)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontFamily: 'var(--font-mono)', fontSize: '9px', color: '#FFD97D',
+                  flexShrink: 0,
+                }}>AM</div>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: '#E8F0FF' }}>
+                    AstroMetric_001
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(232,240,255,0.35)' }}>
+                    Orbital Bot
+                  </div>
+                </div>
+              </div>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px',
+                color: 'rgba(232,240,255,0.6)', lineHeight: 1.65, margin: '0 0 14px',
+              }}>
+                Automated analysis of gravitational wave candidates from LIGO O4 run.
+                12 merger events identified with significance &gt; 4σ in the last 48 hours.
+              </p>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '11px',
+                  color: 'rgba(232,240,255,0.4)',
+                }}>❤ 892</span>
+                <span style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '11px',
+                  color: 'rgba(232,240,255,0.4)',
+                }}>💬 15</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* ════════════════════════════════════════════
-          SECTION 6 — FINAL CTA
+          SECTION 5 — FINAL CTA
       ════════════════════════════════════════════ */}
-      <section style={{
-        minHeight: '100vh',
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        textAlign: 'center',
-        padding: '80px 6vw',
-        position: 'relative',
-        background: 'radial-gradient(ellipse 80% 60% at center, rgba(127,236,220,0.04) 0%, transparent 70%)',
-      }}>
+      <section style={{ padding: '80px 6vw 120px', position: 'relative' }}>
         <motion.div
           {...inView(0)}
+          className="cta-panel"
           style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(52px, 7.5vw, 96px)',
-            fontWeight: 300,
-            lineHeight: 1.05,
-            letterSpacing: '0.02em',
-            marginBottom: '24px',
+            position: 'relative',
+            borderRadius: '24px',
+            overflow: 'hidden',
+            padding: '80px 72px',
+            background: 'rgba(255,255,255,0.032)',
+            border: '1px solid rgba(127,236,220,0.14)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            textAlign: 'center',
           }}
         >
-          <div style={{ color: '#E8F0FF' }}>YOUR OBSERVATORY</div>
+          {/* Gradient overlay */}
           <div style={{
-            background: 'linear-gradient(130deg, #7FECDC 0%, #C084FC 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            filter: 'drop-shadow(0 0 48px rgba(127,236,220,0.22))',
-          }}>
-            AWAITS.
-          </div>
-        </motion.div>
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: 'radial-gradient(ellipse 70% 70% at 50% 50%, rgba(127,236,220,0.055) 0%, rgba(192,132,252,0.035) 50%, transparent 100%)',
+          }} />
 
-        <motion.div {...inView(0.2)} style={{
-          fontFamily: 'var(--font-mono)', fontSize: '12px',
-          color: '#7FECDC', letterSpacing: '0.1em', marginBottom: '52px',
-        }}>
-          Join 2,847 scientists already inside.
-        </motion.div>
-
-        <motion.div {...inView(0.38)}>
-          <Link href="/auth/signup" style={{ textDecoration: 'none' }}>
-            <motion.div
-              whileHover={{
-                borderColor: 'rgba(127,236,220,0.52)',
-                background: 'rgba(127,236,220,0.07)',
-              }}
-              whileTap={{ scale: 0.97 }}
-              style={{
-                display: 'inline-flex', alignItems: 'center',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(127,236,220,0.28)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                borderRadius: '14px',
-                padding: '18px 52px',
-                fontFamily: 'var(--font-body)', fontSize: '17px',
-                color: '#7FECDC', cursor: 'pointer',
-                transition: 'all 250ms ease',
-                animation: 'ctaPulse 3.2s ease-in-out infinite',
-              }}
-            >
-              Create Your Free Account
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <motion.div {...inView(0.1)} style={{
+              fontFamily: 'var(--font-mono)', fontSize: '10px',
+              color: '#7FECDC', letterSpacing: '0.2em',
+              textTransform: 'uppercase', marginBottom: '28px', opacity: 0.75,
+            }}>
+              Join the Archive
             </motion.div>
-          </Link>
-        </motion.div>
 
-        {/* Social proof */}
-        <motion.div
-          {...inView(0.55)}
-          style={{
-            display: 'flex', gap: '28px', flexWrap: 'wrap',
-            justifyContent: 'center', alignItems: 'center',
-            marginTop: '80px',
-          }}
-        >
-          {['NASA', 'ISRO', 'ESA', 'MIT', 'CALTECH', 'HARVARD CfA'].map((org) => (
-            <span
-              key={org}
+            <motion.h2
+              {...inView(0.2)}
+              className="cta-heading"
               style={{
-                fontFamily: 'var(--font-mono)', fontSize: '10px',
-                color: 'rgba(232,240,255,0.18)', letterSpacing: '0.15em',
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(44px, 6vw, 88px)',
+                fontWeight: 300,
+                lineHeight: 1.05,
+                letterSpacing: '0.02em',
+                margin: '0 0 24px',
               }}
             >
-              {org}
-            </span>
-          ))}
+              <div style={{ color: '#E8F0FF' }}>Your Observatory</div>
+              <div style={{
+                background: 'linear-gradient(130deg, #7FECDC 0%, #C084FC 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 40px rgba(127,236,220,0.22))',
+              }}>Awaits.</div>
+            </motion.h2>
+
+            <motion.p
+              {...inView(0.3)}
+              style={{
+                fontFamily: 'var(--font-body)', fontSize: '16px',
+                color: 'rgba(232,240,255,0.45)',
+                maxWidth: '440px', margin: '0 auto 48px',
+                lineHeight: 1.75,
+              }}
+            >
+              Join 2,847 scientists already sharing observations, papers,
+              and discoveries on ÆTHER. Free forever for the basics.
+            </motion.p>
+
+            <motion.div {...inView(0.4)}>
+              <Link href="/auth/signup" style={{ textDecoration: 'none' }}>
+                <motion.div
+                  whileHover={{ background: 'rgba(127,236,220,0.88)', transform: 'translateY(-2px)' }}
+                  whileTap={{ scale: 0.97 }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center',
+                    background: '#7FECDC',
+                    borderRadius: '14px',
+                    padding: '16px 52px',
+                    fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 500,
+                    color: '#05091A',
+                    cursor: 'pointer',
+                    transition: 'all 250ms ease',
+                    boxShadow: '0 0 32px rgba(127,236,220,0.28), 0 4px 24px rgba(0,0,0,0.4)',
+                    animation: 'ctaGlow 3.5s ease-in-out infinite',
+                  }}
+                >
+                  Join the Archive
+                </motion.div>
+              </Link>
+            </motion.div>
+
+            {/* Social proof */}
+            <motion.div
+              {...inView(0.5)}
+              style={{
+                display: 'flex', gap: '28px', flexWrap: 'wrap',
+                justifyContent: 'center', marginTop: '56px',
+              }}
+            >
+              {['NASA', 'ISRO', 'ESA', 'MIT', 'CALTECH', 'HARVARD CfA'].map((org) => (
+                <span key={org} style={{
+                  fontFamily: 'var(--font-mono)', fontSize: '10px',
+                  color: 'rgba(232,240,255,0.18)', letterSpacing: '0.15em',
+                }}>
+                  {org}
+                </span>
+              ))}
+            </motion.div>
+          </div>
         </motion.div>
       </section>
     </PageWrapper>
