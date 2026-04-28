@@ -667,8 +667,8 @@ export default function HomePage() {
           <div className="feed-card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={FEED_IMG_1}
-              alt="Solar flare observation"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-0a-99.jpg/1280px-ESO-VLT-Laser-phot-0a-99.jpg"
+              alt="Solar flare observation — ESO VLT"
               crossOrigin="anonymous"
               style={{ width: '100%', height: '200px', objectFit: 'cover', display: 'block' }}
             />
