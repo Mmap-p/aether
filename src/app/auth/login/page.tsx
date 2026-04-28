@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, type Transition } from 'framer-motion';
 import Link from 'next/link';
 import StarField from '@/components/stars/StarField';
@@ -36,11 +37,22 @@ const testimonials = [
 ];
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailFocus, setEmailFocus] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email === 'test@aether.space' && password === '0000') {
+      router.push('/feed');
+    } else {
+      setError('Invalid credentials');
+    }
+  };
 
   return (
     <div style={{
@@ -230,7 +242,7 @@ export default function LoginPage() {
           >Sign in to your observatory</motion.div>
 
           {/* Form */}
-          <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
 
             {/* Email */}
             <motion.div
@@ -273,6 +285,11 @@ export default function LoginPage() {
                   <path d="M1 5l7 5 7-5" stroke="#7FECDC" strokeWidth="1.2" strokeLinecap="round" />
                 </svg>
               </div>
+              {process.env.NEXT_PUBLIC_APP_ENV === 'development' && (
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#FFD97D', marginTop: '8px', opacity: 0.7 }}>
+                  Test credentials: test@aether.space / 0000
+                </div>
+              )}
             </motion.div>
 
             {/* Password */}
@@ -439,6 +456,20 @@ export default function LoginPage() {
                   Skip login → Enter Feed
                 </Link>
               </motion.div>
+            )}
+
+            {/* Error message */}
+            {error && (
+              <div style={{
+                fontFamily: 'var(--font-mono)', fontSize: '11px',
+                color: '#FF8FAB', textAlign: 'center',
+                padding: '10px 14px',
+                background: 'rgba(255,143,171,0.06)',
+                border: '1px solid rgba(255,143,171,0.2)',
+                borderRadius: '8px',
+              }}>
+                Invalid credentials. Use test@aether.space / 0000
+              </div>
             )}
           </form>
 

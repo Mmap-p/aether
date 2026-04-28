@@ -504,10 +504,10 @@ export default function HomePage() {
               alt=""
               crossOrigin="anonymous"
               aria-hidden="true"
-              className="card-bg"
+              className="card-bg w-full h-full object-cover"
               style={{
-                position: 'absolute', inset: 0, width: '100%', height: '100%',
-                objectFit: 'cover', objectPosition: 'center',
+                position: 'absolute', inset: 0,
+                objectPosition: 'center',
               }}
             />
             <div style={{
@@ -670,7 +670,8 @@ export default function HomePage() {
               src="https://images.unsplash.com/photo-1614732414444-096e5f1122d5?w=1280&q=80"
               alt="Solar flare observation"
               crossOrigin="anonymous"
-              style={{ width: '100%', height: '200px', objectFit: 'cover', display: 'block' }}
+              className="w-full object-cover"
+              style={{ height: '200px', display: 'block' }}
             />
             <div style={{ padding: '20px 20px 22px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
